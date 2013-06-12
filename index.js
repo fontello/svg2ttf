@@ -46,23 +46,13 @@ var CONST = {
 
 //------------------table initialization---------------------
 
-function initTableData(tableSchema) {
+function initTable(schema) {
   var data = {};
-  _.forEach(tableSchema, function (field) {
+  _.forEach(schema, function (field) {
     //if array, add empty array to the table instance
     data[field.name] = _.isArray(field.value) ? [] : field.value;
   });
   return data;
-}
-
-function createTable(table, doc, offset) {
-  return {
-    tag: table.name,
-    checkSum: 0,
-    offset: 0,
-    length: 0,
-    data: initTableData(table.schema)
-  }
 }
 
 //----------------conversion-----------------------------
@@ -91,7 +81,7 @@ function addGlyph(transform, glyphArray, glyphSchema) {
   // just a stub for now
   var numberOfContours = 1;
   var instructionLength = 1;
-  var glyph = initTableData(glyphSchema);
+  var glyph = initTable(glyphSchema);
   glyph.numberOfContours = numberOfContours;
   glyph.xMin = 0;
   glyph.yMin = 0;
@@ -109,22 +99,44 @@ function addGlyph(transform, glyphArray, glyphSchema) {
 }
 
 function fillGlyphs(glyphTable, glyphs) {
+  var offset = 0;
   var offsets = [];
   var glyphArray = glyphTable.glyf;
   var glyphSchema = tableDefs.glyf.glyf;
   for (var i = 0; i < glyphs.length; i ++) {
-    offsets.push(addGlyph(glyphs[i].transform, glyphArray, glyphSchema));
+    offsets.push(offset);
+    offset += addGlyph(glyphs[i].transform, glyphArray, glyphSchema);
   }
   return offsets;
 }
 
-function fillLocations(tables, offsets) {
-  return; //under construction
-  /*var locationsTable = tables.LOCA;
-  var locationsArray = getTableValue(glyphTable, 'offsetsArray');
-  var locationsTemplate = getTableValue(LOCATEMPLATE, 'offsetsArray');
-  var locations = clone(locationsTemplate);
-  fillTableArray(locationsTable, 'offsets', offsets);*/
+function fillLocations(locationTable, offsets) {
+  locationTable.offsetsArray = offsets;
+}
+
+function fillCmap(cmapTable, glyphSegments) {
+  var segCount = glyphSegments.length;
+  cmapTable.stSegCountX2 = segCount * 2;
+  cmapTable.searchRange = 2 * Math.floor(Math.log(segCount));
+  cmapTable.entrySelector = Math.round(Math.log(cmapTable.searchRange / 2));
+  cmapTable.rangeShift = 2 * segCount - cmapTable.searchRange;
+  //calculate segment indexes and offsets
+  if (glyphSegments.length > 0) {
+    var idDeltaDif = 0;
+    _.forEach(glyphSegments, function (glyphSegment) {
+      var idDelta = - glyphSegment.start.unicode + idDeltaDif + 1;
+      cmapTable.stStartCountArray.push(glyphSegment.start.unicode);
+      cmapTable.stEndCountArray.push(glyphSegment.end.unicode);
+      cmapTable.stIdDeltaArray.push(idDelta);
+      cmapTable.stIdRangeOffsetArray.push(0);
+      idDeltaDif = glyphSegment.end.unicode + idDelta;
+    });
+  }
+  //required array values
+  cmapTable.stStartCountArray.push(0xFFFF);
+  cmapTable.stEndCountArray.push(0xFFFF);
+  cmapTable.stIdDeltaArray.push(1);
+  cmapTable.stIdRangeOffsetArray.push(0);
 }
 
 //------------------main---------------------------------
@@ -133,12 +145,12 @@ function svg2ttf(buf, options, callback) {
   var glyphs = svgParsing.getGlyphs(buf);
   var glyphSegments = svgParsing.getGlyphSegments(glyphs);
   var tables = {};
-  var offset = TTF_OFFSET.TABLES;
   _.forEach(tableDefs, function (tableDef) {
-    tables[tableDef.name] = createTable(tableDef);
+    tables[tableDef.name] = initTable(tableDef.schema);
   });
-  var offsets = fillGlyphs(tables.glyf.data, glyphs);
-  fillLocations(tables.location.data, offsets);
+  var offsets = fillGlyphs(tables.glyf, glyphs);
+  fillLocations(tables.location, offsets);
+  fillCmap(tables.cmap, glyphSegments);
   callback(null, serialize.writeToBuffer(tables));
 }
 
