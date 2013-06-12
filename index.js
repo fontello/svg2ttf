@@ -9,9 +9,9 @@
 'use strict';
 
 var _ = require('lodash');
-var tableDefs = require("./tabledefs").TableDefs;
-var svgParsing = require("./svgparsing").SvgParsing;
-var serialize = require("./serialize").Serialize;
+var tableDefs = require("./lib/tabledefs").TableDefs;
+var svgParsing = require("./lib/svgparsing").SvgParsing;
+var serialize = require("./lib/serialize").Serialize;
 
 //------------------------constants--------------------------
 
