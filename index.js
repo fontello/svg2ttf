@@ -116,27 +116,20 @@ function fillLocations(locationTable, offsets) {
 
 function fillCmap(cmapTable, glyphSegments) {
   var segCount = glyphSegments.length;
-  cmapTable.stSegCountX2 = segCount * 2;
-  cmapTable.searchRange = 2 * Math.floor(Math.log(segCount));
-  cmapTable.entrySelector = Math.round(Math.log(cmapTable.searchRange / 2));
-  cmapTable.rangeShift = 2 * segCount - cmapTable.searchRange;
+  var subTable = initTable(tableDefs.cmap.subTable);
   //calculate segment indexes and offsets
   if (glyphSegments.length > 0) {
-    var idDeltaDif = 0;
+    var startGlyphCode = 1;
     _.forEach(glyphSegments, function (glyphSegment) {
-      var idDelta = - glyphSegment.start.unicode + idDeltaDif + 1;
-      cmapTable.stStartCountArray.push(glyphSegment.start.unicode);
-      cmapTable.stEndCountArray.push(glyphSegment.end.unicode);
-      cmapTable.stIdDeltaArray.push(idDelta);
-      cmapTable.stIdRangeOffsetArray.push(0);
-      idDeltaDif = glyphSegment.end.unicode + idDelta;
+      var segment = initTable(tableDefs.cmap.subTable.groupsArray);
+      segment.startCharCode = glyphSegment.start.unicode;
+      segment.endCharCode = glyphSegment.end.unicode;
+      segment.startGlyphCode = startGlyphCode;
+      subTable.groupsArray.push(segment);
+      startGlyphCode += segment.endCharCode - segment.startCharCode + 1;
     });
   }
-  //required array values
-  cmapTable.stStartCountArray.push(0xFFFF);
-  cmapTable.stEndCountArray.push(0xFFFF);
-  cmapTable.stIdDeltaArray.push(1);
-  cmapTable.stIdRangeOffsetArray.push(0);
+  cmapTable.subTable.push(subTable); //we have only one subtable now
 }
 
 //------------------main---------------------------------
