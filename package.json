@@ -20,7 +20,8 @@
 
   "dependencies"    : { "argparse": "~0.1.12",
                         "lodash": "~ 1.2.1",
-                        "xmldom": "~ 0.1.5"
+                        "xmldom": "~ 0.1.5",
+                        "jDataView": "~ 2.2.1"
                       },
 
     "repository"      : {

@@ -3,7 +3,7 @@
 
  Written for fontello.com project.
 
- TTF file structure is based on https://developer.apple.com/fonts/TTRefMan/RM06/Chap6cmap.html
+ TTF file structure is based on https://developer.apple.com/fonts/TTRefMan/RM06/Chap6.html
  */
 
 'use strict';
@@ -13,44 +13,20 @@ var tableDefs = require("./lib/tabledefs").TableDefs;
 var svgParsing = require("./lib/svgparsing").SvgParsing;
 var serialize = require("./lib/serialize").Serialize;
 
-//------------------------constants--------------------------
-
-//offsets
-var TTF_OFFSET = {
-  VERSION: 0,
-  NUM_TABLES: 4,
-  SEARCH_RANGE: 6,
-  ENTRY_SELECTOR: 8,
-  RANGE_SHIFT: 10,
-  TABLES: 12
-};
-
-var TABLE_OFFSET = {
-  TAG: 0,
-  CHECK_SUM: 4,
-  OFFSET: 8,
-  LENGTH: 12
-};
-
-//sizes
-var SIZEOF = {
-  HEADER: 12,
-  TABLE: 16
-};
-
-//various constants
-var CONST = {
-  VERSION: 1,
-  NUM_TABLES: 16
-}
-
 //------------------table initialization---------------------
 
 function initTable(schema) {
   var data = {};
   _.forEach(schema, function (field) {
     //if array, add empty array to the table instance
-    data[field.name] = _.isArray(field.value) ? [] : field.value;
+    if (_.isArray(field.value)) {
+      if (field.isFixed) //single instance of array should be presented
+        data[field.name] = initTable(field.value);
+      else
+        data[field.name] = [];
+    }
+    else
+      data[field.name] = field.value;
   });
   return data;
 }
@@ -132,6 +108,11 @@ function fillCmap(cmapTable, glyphSegments) {
   cmapTable.subTable.push(subTable); //we have only one subtable now
 }
 
+function fillMaxp(maxpTable, glyphs) {
+  maxpTable.numGlyphs = glyphs.length;
+}
+
+
 //------------------main---------------------------------
 
 function svg2ttf(buf, options, callback) {
@@ -144,7 +125,8 @@ function svg2ttf(buf, options, callback) {
   var offsets = fillGlyphs(tables.glyf, glyphs);
   fillLocations(tables.location, offsets);
   fillCmap(tables.cmap, glyphSegments);
-  callback(null, serialize.writeToBuffer(tables));
+  fillMaxp(tables.maxp, glyphs);
+  callback(null, serialize.toBuffer(tables));
 }
 
 module.exports = svg2ttf;
