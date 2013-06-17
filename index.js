@@ -9,8 +9,8 @@
 'use strict';
 
 var _ = require('lodash');
-var SVG = require("./lib/svg").SVG;
-var TTF = require("./lib/ttf").TTF;
+var SVGFont = require("./lib/svg_font");
+var TTF = require("./lib/ttf");
 
 //------------------table initialization---------------------
 
@@ -38,55 +38,53 @@ function getGlyphYCoordinates(transform) {
   return [0, 1]; // just a stub for now
 }
 
-function addGlyph(glyphTable, glyphObject) {
+function addGlyphElement(glyphTable, glyphObject) {
   // just a stub for now
   var numberOfContours = 1;
   var instructionLength = 1;
   var transform = glyphObject.transform;
-  var glyph = glyphTable.glyfArray.new();
+  var glyph = glyphTable.glyfArray.createElement();
   glyph.numberOfContours = numberOfContours;
   glyph.xMin = 0;
   glyph.yMin = 0;
   glyph.xMax = 0;
   glyph.yMax = 0;
-  glyph.endPtsOfContoursArray.add(getGlyphEndPtsOfContours(transform, numberOfContours));
-  glyph.endPtsOfContoursArray.add(getGlyphEndPtsOfContours(transform, numberOfContours));
+  glyph.endPtsOfContoursArray.createElement(getGlyphEndPtsOfContours(transform, numberOfContours));
+  glyph.endPtsOfContoursArray.createElement(getGlyphEndPtsOfContours(transform, numberOfContours));
   glyph.instructionLength = instructionLength;
-  glyph.instructionsArray.add(getGlyphInstructions(transform, instructionLength));
-  glyph.flagsArray.add(getGlyphFlags(transform));
-  glyph.xCoordinatesArray.add(getGlyphXCoordinates(transform));
-  glyph.yCoordinatesArray.add(getGlyphYCoordinates(transform));
-  glyphTable.glyfArray.add(glyph);
+  glyph.instructionsArray.createElement(getGlyphInstructions(transform, instructionLength));
+  glyph.flagsArray.createElement(getGlyphFlags(transform));
+  glyph.xCoordinatesArray.createElement(getGlyphXCoordinates(transform));
+  glyph.yCoordinatesArray.createElement(getGlyphYCoordinates(transform));
+  glyphTable.glyfArray.createElement(glyph);
+  return glyph;
 }
 
-function fillGlyphs(glyphTable, glyphs) {
+function fillGlyphs(tables, glyphs) {
+  var glyphTable = tables.glyf;
+  var locationTable = tables.location;
   _.forEach(glyphs, function (glyph) {
-    addGlyph(glyphTable, glyph);
-  });
-}
-
-function fillLocations(locationTable, glyphTable) {
-  _.forEach(glyphTable.glyfArray.value, function (glyph) {
-    locationTable.offsetsArray.add(glyph.length);
+    var glyphElement = addGlyphElement(glyphTable, glyph);
+    locationTable.offsetsArray.createElement(glyphElement.length);
   });
 }
 
 function fillCmap(cmapTable, glyphSegments) {
   var segCount = glyphSegments.length;
-  var subTable12 = cmapTable.subTable12.new();
+  var subTable12 = cmapTable.subTable12.createElement();
   //calculate segment indexes and offsets
   if (glyphSegments.length > 0) {
     var startGlyphCode = 1;
     _.forEach(glyphSegments, function (glyphSegment) {
-      var segment = subTable12.groupsArray.new();
+      var segment = subTable12.groupsArray.createElement();
       segment.startCharCode = glyphSegment.start.unicode;
       segment.endCharCode = glyphSegment.end.unicode;
       segment.startGlyphCode = startGlyphCode;
-      subTable12.groupsArray.add(segment);
+      subTable12.groupsArray.createElement(segment);
       startGlyphCode += segment.endCharCode - segment.startCharCode + 1;
     });
   }
-  cmapTable.subTable12.add(subTable12);
+  cmapTable.subTable12.createElement(subTable12);
 }
 
 function fillMaxp(maxpTable, glyphs) {
@@ -97,10 +95,9 @@ function fillMaxp(maxpTable, glyphs) {
 //------------------main---------------------------------
 
 function svg2ttf(svg, options, callback) {
-  var glyphs = SVG.getGlyphs(svg);
-  var ttf = TTF.init();
-  var offsets = fillGlyphs(ttf.glyf, glyphs.items);
-  fillLocations(ttf.location, ttf.glyf);
+  var glyphs = SVGFont.getFont(svg);
+  var ttf = new TTF();
+  fillGlyphs(ttf, glyphs.items);
   fillCmap(ttf.cmap, glyphs.segments);
   fillMaxp(ttf.maxp, glyphs.items);
   callback(null, ttf.toBuffer());
