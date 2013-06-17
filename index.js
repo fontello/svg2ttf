@@ -9,27 +9,12 @@
 'use strict';
 
 var _ = require('lodash');
-var tableDefs = require("./lib/tabledefs").TableDefs;
-var svgParsing = require("./lib/svgparsing").SvgParsing;
-var serialize = require("./lib/serialize").Serialize;
+var SVG = require("./lib/svg").SVG;
+var TTF = require("./lib/ttf").TTF;
 
 //------------------table initialization---------------------
 
-function initTable(schema) {
-  var data = {};
-  _.forEach(schema, function (field) {
-    //if array, add empty array to the table instance
-    if (_.isArray(field.value)) {
-      if (field.isFixed) //single instance of array should be presented
-        data[field.name] = initTable(field.value);
-      else
-        data[field.name] = [];
-    }
-    else
-      data[field.name] = field.value;
-  });
-  return data;
-}
+
 
 //----------------conversion-----------------------------
 
@@ -53,59 +38,55 @@ function getGlyphYCoordinates(transform) {
   return [0, 1]; // just a stub for now
 }
 
-function addGlyph(transform, glyphArray, glyphSchema) {
+function addGlyph(glyphTable, glyphObject) {
   // just a stub for now
   var numberOfContours = 1;
   var instructionLength = 1;
-  var glyph = initTable(glyphSchema);
+  var transform = glyphObject.transform;
+  var glyph = glyphTable.glyfArray.new();
   glyph.numberOfContours = numberOfContours;
   glyph.xMin = 0;
   glyph.yMin = 0;
   glyph.xMax = 0;
   glyph.yMax = 0;
-  glyph.endPtsOfContoursArray = getGlyphEndPtsOfContours(transform, numberOfContours);
-  glyph.endPtsOfContoursArray = getGlyphEndPtsOfContours(transform, numberOfContours);
+  glyph.endPtsOfContoursArray.add(getGlyphEndPtsOfContours(transform, numberOfContours));
+  glyph.endPtsOfContoursArray.add(getGlyphEndPtsOfContours(transform, numberOfContours));
   glyph.instructionLength = instructionLength;
-  glyph.instructionsArray = getGlyphInstructions(transform, instructionLength);
-  glyph.flagsArray = getGlyphFlags(transform);
-  glyph.xCoordinatesArray = getGlyphXCoordinates(transform);
-  glyph.yCoordinatesArray = getGlyphYCoordinates(transform);
-  glyphArray.push(glyph);
-  return serialize.getLength(glyph, glyphSchema);
+  glyph.instructionsArray.add(getGlyphInstructions(transform, instructionLength));
+  glyph.flagsArray.add(getGlyphFlags(transform));
+  glyph.xCoordinatesArray.add(getGlyphXCoordinates(transform));
+  glyph.yCoordinatesArray.add(getGlyphYCoordinates(transform));
+  glyphTable.glyfArray.add(glyph);
 }
 
 function fillGlyphs(glyphTable, glyphs) {
-  var offset = 0;
-  var offsets = [];
-  var glyphArray = glyphTable.glyf;
-  var glyphSchema = tableDefs.glyf.glyf;
-  for (var i = 0; i < glyphs.length; i ++) {
-    offsets.push(offset);
-    offset += addGlyph(glyphs[i].transform, glyphArray, glyphSchema);
-  }
-  return offsets;
+  _.forEach(glyphs, function (glyph) {
+    addGlyph(glyphTable, glyph);
+  });
 }
 
-function fillLocations(locationTable, offsets) {
-  locationTable.offsetsArray = offsets;
+function fillLocations(locationTable, glyphTable) {
+  _.forEach(glyphTable.glyfArray.value, function (glyph) {
+    locationTable.offsetsArray.add(glyph.length);
+  });
 }
 
 function fillCmap(cmapTable, glyphSegments) {
   var segCount = glyphSegments.length;
-  var subTable = initTable(tableDefs.cmap.subTable);
+  var subTable12 = cmapTable.subTable12.new();
   //calculate segment indexes and offsets
   if (glyphSegments.length > 0) {
     var startGlyphCode = 1;
     _.forEach(glyphSegments, function (glyphSegment) {
-      var segment = initTable(tableDefs.cmap.subTable.groupsArray);
+      var segment = subTable12.groupsArray.new();
       segment.startCharCode = glyphSegment.start.unicode;
       segment.endCharCode = glyphSegment.end.unicode;
       segment.startGlyphCode = startGlyphCode;
-      subTable.groupsArray.push(segment);
+      subTable12.groupsArray.add(segment);
       startGlyphCode += segment.endCharCode - segment.startCharCode + 1;
     });
   }
-  cmapTable.subTable.push(subTable); //we have only one subtable now
+  cmapTable.subTable12.add(subTable12);
 }
 
 function fillMaxp(maxpTable, glyphs) {
@@ -115,18 +96,15 @@ function fillMaxp(maxpTable, glyphs) {
 
 //------------------main---------------------------------
 
-function svg2ttf(buf, options, callback) {
-  var glyphs = svgParsing.getGlyphs(buf);
-  var glyphSegments = svgParsing.getGlyphSegments(glyphs);
-  var tables = {};
-  _.forEach(tableDefs, function (tableDef) {
-    tables[tableDef.name] = initTable(tableDef.schema);
-  });
-  var offsets = fillGlyphs(tables.glyf, glyphs);
-  fillLocations(tables.location, offsets);
-  fillCmap(tables.cmap, glyphSegments);
-  fillMaxp(tables.maxp, glyphs);
-  callback(null, serialize.toBuffer(tables));
+function svg2ttf(svg, options, callback) {
+  var glyphs = SVG.getGlyphs(svg);
+  var glyphSegments = SVG.getGlyphSegments(glyphs);
+  var ttf = TTF.init();
+  var offsets = fillGlyphs(ttf.glyf, glyphs);
+  fillLocations(ttf.location, ttf.glyf);
+  fillCmap(ttf.cmap, glyphSegments);
+  fillMaxp(ttf.maxp, glyphs);
+  callback(null, ttf.toBuffer());
 }
 
 module.exports = svg2ttf;
