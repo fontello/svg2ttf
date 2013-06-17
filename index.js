@@ -98,12 +98,11 @@ function fillMaxp(maxpTable, glyphs) {
 
 function svg2ttf(svg, options, callback) {
   var glyphs = SVG.getGlyphs(svg);
-  var glyphSegments = SVG.getGlyphSegments(glyphs);
   var ttf = TTF.init();
-  var offsets = fillGlyphs(ttf.glyf, glyphs);
+  var offsets = fillGlyphs(ttf.glyf, glyphs.items);
   fillLocations(ttf.location, ttf.glyf);
-  fillCmap(ttf.cmap, glyphSegments);
-  fillMaxp(ttf.maxp, glyphs);
+  fillCmap(ttf.cmap, glyphs.segments);
+  fillMaxp(ttf.maxp, glyphs.items);
   callback(null, ttf.toBuffer());
 }
 
