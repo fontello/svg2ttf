@@ -9,7 +9,7 @@
 'use strict';
 
 var _ = require('lodash');
-var SVGFont = require("./lib/svg_font");
+var svg_font = require("./lib/svg_font");
 var TTF = require("./lib/ttf");
 
 //------------------table initialization---------------------
@@ -95,11 +95,11 @@ function fillMaxp(maxpTable, glyphs) {
 //------------------main---------------------------------
 
 function svg2ttf(svg, options, callback) {
-  var glyphs = SVGFont.getFont(svg);
+  var glyphs = svg_font(svg);
   var ttf = new TTF();
-  fillGlyphs(ttf, glyphs.items);
-  fillCmap(ttf.cmap, glyphs.segments);
-  fillMaxp(ttf.maxp, glyphs.items);
+  fillGlyphs(ttf.tables, glyphs.items);
+  fillCmap(ttf.tables.cmap, glyphs.segments);
+  fillMaxp(ttf.tables.maxp, glyphs.items);
   callback(null, ttf.toBuffer());
 }
 
