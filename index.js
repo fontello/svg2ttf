@@ -69,11 +69,22 @@ function fillGlyphs(tables, glyphs) {
   });
 }
 
-function fillCmap(cmapTable, glyphSegments) {
-  var segCount = glyphSegments.length;
-  var subTable12 = cmapTable.subTable12.createElement();
-  //calculate segment indexes and offsets
+function fillCmap(cmapTable, glyphs, glyphSegments) {
+  //fill table 0
+  var subTable0 = cmapTable.subTable0.value[0];
+  if (glyphs.length > 0) {
+    var i = 1;
+    _.forEach(glyphs, function (glyph) {
+      if (glyph.unicode < 256) {
+        subTable0.glyphIdArray.value[glyph.unicode] = i;
+        i ++;
+      }
+    });
+  }
+
+  //fill table 12
   if (glyphSegments.length > 0) {
+    var subTable12 = cmapTable.subTable12.value[0];
     var startGlyphCode = 1;
     _.forEach(glyphSegments, function (glyphSegment) {
       var segment = subTable12.groupsArray.createElement();
@@ -83,7 +94,6 @@ function fillCmap(cmapTable, glyphSegments) {
       subTable12.groupsArray.add(segment);
       startGlyphCode += segment.endCharCode - segment.startCharCode + 1;
     });
-    cmapTable.subTable12.add(subTable12);
   }
 }
 
@@ -98,7 +108,7 @@ function svg2ttf(svg, options, callback) {
   var glyphs = svg_font(svg);
   var ttf = new TTF();
   fillGlyphs(ttf.tables, glyphs.items);
-  fillCmap(ttf.tables.cmap, glyphs.segments);
+  fillCmap(ttf.tables.cmap, glyphs.items, glyphs.segments);
   fillMaxp(ttf.tables.maxp, glyphs.items);
   callback(null, ttf.toBuffer());
 }
