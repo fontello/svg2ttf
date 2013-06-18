@@ -49,14 +49,14 @@ function addGlyphElement(glyphTable, glyphObject) {
   glyph.yMin = 0;
   glyph.xMax = 0;
   glyph.yMax = 0;
-  glyph.endPtsOfContoursArray.createElement(getGlyphEndPtsOfContours(transform, numberOfContours));
-  glyph.endPtsOfContoursArray.createElement(getGlyphEndPtsOfContours(transform, numberOfContours));
+  glyph.endPtsOfContoursArray.add(getGlyphEndPtsOfContours(transform, numberOfContours));
+  glyph.endPtsOfContoursArray.add(getGlyphEndPtsOfContours(transform, numberOfContours));
   glyph.instructionLength = instructionLength;
-  glyph.instructionsArray.createElement(getGlyphInstructions(transform, instructionLength));
-  glyph.flagsArray.createElement(getGlyphFlags(transform));
-  glyph.xCoordinatesArray.createElement(getGlyphXCoordinates(transform));
-  glyph.yCoordinatesArray.createElement(getGlyphYCoordinates(transform));
-  glyphTable.glyfArray.createElement(glyph);
+  glyph.instructionsArray.add(getGlyphInstructions(transform, instructionLength));
+  glyph.flagsArray.add(getGlyphFlags(transform));
+  glyph.xCoordinatesArray.add(getGlyphXCoordinates(transform));
+  glyph.yCoordinatesArray.add(getGlyphYCoordinates(transform));
+  glyphTable.glyfArray.add(glyph);
   return glyph;
 }
 
@@ -65,7 +65,7 @@ function fillGlyphs(tables, glyphs) {
   var locationTable = tables.location;
   _.forEach(glyphs, function (glyph) {
     var glyphElement = addGlyphElement(glyphTable, glyph);
-    locationTable.offsetsArray.createElement(glyphElement.length);
+    locationTable.offsetsArray.add(glyphElement.length);
   });
 }
 
@@ -80,11 +80,11 @@ function fillCmap(cmapTable, glyphSegments) {
       segment.startCharCode = glyphSegment.start.unicode;
       segment.endCharCode = glyphSegment.end.unicode;
       segment.startGlyphCode = startGlyphCode;
-      subTable12.groupsArray.createElement(segment);
+      subTable12.groupsArray.add(segment);
       startGlyphCode += segment.endCharCode - segment.startCharCode + 1;
     });
+    cmapTable.subTable12.add(subTable12);
   }
-  cmapTable.subTable12.createElement(subTable12);
 }
 
 function fillMaxp(maxpTable, glyphs) {
