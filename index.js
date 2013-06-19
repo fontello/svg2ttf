@@ -60,13 +60,17 @@ function addGlyphElement(glyphTable, glyphObject) {
   return glyph;
 }
 
-function fillGlyphs(tables, glyphs) {
+function fillGlyphs(tables, font) {
   var glyphTable = tables.glyf;
   var locationTable = tables.location;
-  _.forEach(glyphs, function (glyph) {
-    var glyphElement = addGlyphElement(glyphTable, glyph);
-    locationTable.offsetsArray.add(glyphElement.length);
+  //add misssed glyph
+  locationTable.offsetsArray.add(0);
+  var offset = addGlyphElement(glyphTable, font.missedGlyph).length;
+  _.forEach(font.glyphs, function (glyph) {
+    locationTable.offsetsArray.add(offset);
+    offset += addGlyphElement(glyphTable, glyph).length;
   });
+  locationTable.offsetsArray.add(offset);
 }
 
 function fillCmap(cmapTable, glyphs, glyphSegments) {
@@ -81,12 +85,14 @@ function fillCmap(cmapTable, glyphs, glyphSegments) {
       }
     });
   }
+  //for all subtables we should serialize its length
+  subTable0.stLength = subTable0.length;
 
   //fill table 4
   var subTable4 = cmapTable.subTable4.value[0];
   if (glyphSegments.length > 0) {
     var segCount = glyphSegments.length;
-    subTable4.stSegCountX2 = segCount * 2;
+    subTable4.segCountX2 = segCount * 2;
     subTable4.searchRange = 2 * Math.floor(Math.log(segCount));
     subTable4.entrySelector = Math.round(Math.log(subTable4.searchRange / 2));
     subTable4.rangeShift = 2 * segCount - subTable4.searchRange;
@@ -108,6 +114,7 @@ function fillCmap(cmapTable, glyphs, glyphSegments) {
     subTable4.endCountArray.add(0xFFFF);
     subTable4.idDeltaArray.add(1);
     subTable4.idRangeOffsetArray.add(0);
+    subTable4.stLength = subTable4.length;
   }
 
   //fill table 12
@@ -122,22 +129,36 @@ function fillCmap(cmapTable, glyphs, glyphSegments) {
       subTable12.groupsArray.add(segment);
       startGlyphCode += segment.endCharCode - segment.startCharCode + 1;
     });
+    subTable12.stLength = subTable12.length;
+  }
+
+  //fill table headers
+  var offset = 4 + cmapTable.headers.value[0].length * cmapTable.headers.value.length;
+  for (var i = 0; i < cmapTable.headers.value.length; i++) {
+    cmapTable.headers.value[i].offset = offset;
+    if (i == 0)
+      offset += cmapTable.subTable0.value[0].stLength;
+    else if (i == 1)
+      offset += cmapTable.subTable4.value[0].stLength;
+    else if (i == 2)
+      offset += cmapTable.subTable12.value[0].stLength;
   }
 }
 
 function fillMaxp(maxpTable, glyphs) {
-  maxpTable.numGlyphs = glyphs.length;
+  //include missed glyph
+  maxpTable.numGlyphs = glyphs.length + 1;
 }
 
 
 //------------------main---------------------------------
 
 function svg2ttf(svg, options, callback) {
-  var glyphs = svg_font(svg);
+  var font = svg_font(svg);
   var ttf = new TTF();
-  fillGlyphs(ttf.tables, glyphs.items);
-  fillCmap(ttf.tables.cmap, glyphs.items, glyphs.segments);
-  fillMaxp(ttf.tables.maxp, glyphs.items);
+  fillGlyphs(ttf.tables, font);
+  fillCmap(ttf.tables.cmap, font.glyphs, font.segments);
+  fillMaxp(ttf.tables.maxp, font.glyphs);
   callback(null, ttf.toBuffer());
 }
 
