@@ -82,6 +82,34 @@ function fillCmap(cmapTable, glyphs, glyphSegments) {
     });
   }
 
+  //fill table 4
+  var subTable4 = cmapTable.subTable4.value[0];
+  if (glyphSegments.length > 0) {
+    var segCount = glyphSegments.length;
+    subTable4.stSegCountX2 = segCount * 2;
+    subTable4.searchRange = 2 * Math.floor(Math.log(segCount));
+    subTable4.entrySelector = Math.round(Math.log(subTable4.searchRange / 2));
+    subTable4.rangeShift = 2 * segCount - subTable4.searchRange;
+    //calculate segment indexes and offsets
+    var prevEndCode = 0;
+    var prevDelta = 0;
+    _.forEach(glyphSegments, function (glyphSegment) {
+      if (glyphSegment.start.unicode < 0xFFFF) {
+        subTable4.startCountArray.add(glyphSegment.start.unicode);
+        subTable4.endCountArray.add(glyphSegment.end.unicode < 0xFFFF ? glyphSegment.end.unicode : 0xFFFF);
+        var delta = prevEndCode - glyphSegment.start.unicode + prevDelta + 1;
+        subTable4.idDeltaArray.add(0xFFFF + delta);
+        subTable4.idRangeOffsetArray.add(0);
+        prevEndCode = glyphSegment.end.unicode;
+        prevDelta = delta;
+      }
+    });
+    subTable4.startCountArray.add(0xFFFF);
+    subTable4.endCountArray.add(0xFFFF);
+    subTable4.idDeltaArray.add(1);
+    subTable4.idRangeOffsetArray.add(0);
+  }
+
   //fill table 12
   if (glyphSegments.length > 0) {
     var subTable12 = cmapTable.subTable12.value[0];
