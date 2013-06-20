@@ -86,41 +86,54 @@ function fillCmap(cmapTable, glyphs, glyphSegments) {
     });
   }
   //for all subtables we should serialize its length
+  //it must be done after subtable is filled
   subTable0.stLength = subTable0.length;
 
   //fill table 4
   var subTable4 = cmapTable.subTable4.value[0];
   if (glyphSegments.length > 0) {
-    var segCount = glyphSegments.length;
-    subTable4.segCountX2 = segCount * 2;
-    subTable4.searchRange = 2 * Math.floor(Math.log(segCount));
-    subTable4.entrySelector = Math.round(Math.log(subTable4.searchRange / 2));
-    subTable4.rangeShift = 2 * segCount - subTable4.searchRange;
-    //calculate segment indexes and offsets
+    //calculate segment offsets
     var prevEndCode = 0;
-    var prevDelta = 0;
+    var prevDelta = -1;
+    var segCount = 1;
     _.forEach(glyphSegments, function (glyphSegment) {
-      if (glyphSegment.start.unicode < 0xFFFF) {
+      if (glyphSegment.start.unicode <= 0xFFFF) {
         subTable4.startCountArray.add(glyphSegment.start.unicode);
         subTable4.endCountArray.add(glyphSegment.end.unicode < 0xFFFF ? glyphSegment.end.unicode : 0xFFFF);
         var delta = prevEndCode - glyphSegment.start.unicode + prevDelta + 1;
-        subTable4.idDeltaArray.add(0xFFFF + delta);
+        subTable4.idDeltaArray.add(delta > 0x7FFF ? delta - 0x10000 : (delta < -0x7FFF ? delta + 0x10000 : delta));
         subTable4.idRangeOffsetArray.add(0);
         prevEndCode = glyphSegment.end.unicode;
         prevDelta = delta;
+        segCount++;
       }
     });
     subTable4.startCountArray.add(0xFFFF);
     subTable4.endCountArray.add(0xFFFF);
     subTable4.idDeltaArray.add(1);
     subTable4.idRangeOffsetArray.add(0);
-    subTable4.stLength = subTable4.length;
+
+    subTable4.segCountX2 = segCount * 2;
+    subTable4.searchRange = 2 * Math.floor(Math.log(segCount));
+    subTable4.entrySelector = Math.round(Math.log(subTable4.searchRange / 2));
+    subTable4.rangeShift = 2 * segCount - subTable4.searchRange;
+
+    subTable4.glyphIdArray.add(0);
+    var i = 1;
+    _.forEach(glyphs, function (glyph) {
+      if (glyph.unicode <= 0xFFFF) {
+      subTable4.glyphIdArray.add(i++)
+      }
+    });
   }
+  //serialize length, must be after subtable is filled
+  subTable4.stLength = subTable4.length;
 
   //fill table 12
   if (glyphSegments.length > 0) {
     var subTable12 = cmapTable.subTable12.value[0];
-    var startGlyphCode = 1;
+    subTable12.nGroups = glyphSegments.length;
+    var startGlyphCode = 0;
     _.forEach(glyphSegments, function (glyphSegment) {
       var segment = subTable12.groupsArray.createElement();
       segment.startCharCode = glyphSegment.start.unicode;
@@ -129,8 +142,9 @@ function fillCmap(cmapTable, glyphs, glyphSegments) {
       subTable12.groupsArray.add(segment);
       startGlyphCode += segment.endCharCode - segment.startCharCode + 1;
     });
-    subTable12.stLength = subTable12.length;
   }
+  //serialize length, must be after subtable is filled
+  subTable12.stLength = subTable12.length;
 
   //fill table headers
   var offset = 4 + cmapTable.headers.value[0].length * cmapTable.headers.value.length;
