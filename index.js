@@ -19,40 +19,33 @@ var TTF = require("./lib/ttf");
 //----------------conversion-----------------------------
 
 function getGlyphEndPtsOfContours(transform, numberOfContours) {
-  return [0, 1]; // just a stub for now
-}
-
-function getGlyphInstructions(transform, numberOfContours) {
-  return [0, 1]; // just a stub for now
+  return [0]; // just a stub for now
 }
 
 function getGlyphFlags(transform) {
-  return [0, 1]; // just a stub for now
+  return [1]; // just a stub for now
 }
 
 function getGlyphXCoordinates(transform) {
-  return [0, 1]; // just a stub for now
+  return [0, 100]; // just a stub for now
 }
 
 function getGlyphYCoordinates(transform) {
-  return [0, 1]; // just a stub for now
+  return [0, 200]; // just a stub for now
 }
 
 function addGlyphElement(glyphTable, glyphObject) {
   // just a stub for now
   var numberOfContours = 1;
-  var instructionLength = 1;
   var transform = glyphObject.transform;
   var glyph = glyphTable.glyfArray.createElement();
   glyph.numberOfContours = numberOfContours;
   glyph.xMin = 0;
   glyph.yMin = 0;
-  glyph.xMax = 0;
-  glyph.yMax = 0;
+  glyph.xMax = glyphObject.width;
+  glyph.yMax = glyphObject.height;
   glyph.endPtsOfContoursArray.add(getGlyphEndPtsOfContours(transform, numberOfContours));
   glyph.endPtsOfContoursArray.add(getGlyphEndPtsOfContours(transform, numberOfContours));
-  glyph.instructionLength = instructionLength;
-  glyph.instructionsArray.add(getGlyphInstructions(transform, instructionLength));
   glyph.flagsArray.add(getGlyphFlags(transform));
   glyph.xCoordinatesArray.add(getGlyphXCoordinates(transform));
   glyph.yCoordinatesArray.add(getGlyphYCoordinates(transform));
