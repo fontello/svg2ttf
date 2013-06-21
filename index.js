@@ -12,6 +12,12 @@ var _ = require('lodash');
 var svg_font = require("./lib/svg_font");
 var TTF = require("./lib/ttf");
 
+var TTF_NAMES = {
+  COPYRIGHT: 0,
+  FONT_FAMILY: 1,
+  ID: 3
+}
+
 //----------------conversion-----------------------------
 
 function addGlyphMetrics(glyph, font, svgGlyph) {
@@ -37,9 +43,14 @@ function addGlyphElement(glyphTable, font, svgGlyph) {
   return glyph;
 }
 
-function getGlyphNameAsBytesArray(name) {
-  var bytes = [name.length]; //Pascal format
+//TODO: should we process non-ascii names?
+function getStringAsByteArray(name, isPascalFormat) {
+  var bytes = [];
+  if (isPascalFormat)
+    bytes.push(name.length);
   for (var i = 0; i < name.length; i ++) {
+    if (!isPascalFormat)
+      bytes.push(0);
     bytes.push(name.charCodeAt(i));
   }
   return bytes;
@@ -62,7 +73,7 @@ function fillGlyphs(tables, font) {
     //add glyph
     offset += addGlyphElement(glyphTable, font, glyph).length;
     //add name
-    postTable.names.add(getGlyphNameAsBytesArray(glyph.name));
+    postTable.names.add(getStringAsByteArray(glyph.name, true));
     postTable.glyphNameIndex.add(nameOffset ++);
   });
   locationTable.offsetsArray.add(offset);
@@ -159,6 +170,25 @@ function fillMaxp(maxpTable, glyphs) {
   maxpTable.numGlyphs = glyphs.length + 1;
 }
 
+function addName(nameTable, value, nameID) {
+  var nameRecord = nameTable.nameRecordsArray.createElement();
+  nameRecord.nameID = nameID;
+  var bytes = getStringAsByteArray(value);
+  nameRecord.reclength = bytes.length;
+  nameRecord.offset = nameTable.actualStringData.value.length;
+  nameTable.actualStringData.add(bytes);
+  nameTable.nameRecordsCount ++;
+  nameTable.nameRecordsArray.add(nameRecord);
+  return nameRecord.length;
+}
+
+function fillNames(nameTable, font) {
+  var length = 6; //initial offset
+  length += addName(nameTable, font.copyright, TTF_NAMES.COPYRIGHT);
+  length += addName(nameTable, font.id, TTF_NAMES.ID);
+  length += addName(nameTable, font.family, TTF_NAMES.FONT_FAMILY);
+  nameTable.offset = length;
+}
 
 //------------------main---------------------------------
 
@@ -168,6 +198,7 @@ function svg2ttf(svg, options, callback) {
   fillGlyphs(ttf.tables, font);
   fillCmap(ttf.tables.cmap, font.glyphs, font.segments);
   fillMaxp(ttf.tables.maxp, font.glyphs);
+  fillNames(ttf.tables.name, font);
   callback(null, ttf.toBuffer());
 }
 
