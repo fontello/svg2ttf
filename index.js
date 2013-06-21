@@ -37,15 +37,33 @@ function addGlyphElement(glyphTable, font, svgGlyph) {
   return glyph;
 }
 
+function getGlyphNameAsBytesArray(name) {
+  var bytes = [name.length]; //Pascal format
+  for (var i = 0; i < name.length; i ++) {
+    bytes.push(name.charCodeAt(i));
+  }
+  return bytes;
+}
+
 function fillGlyphs(tables, font) {
   var glyphTable = tables.glyf;
   var locationTable = tables.location;
+  var postTable = tables.post;
+  postTable.numberOfGlyphs = font.glyphs.length + 1;
   //add misssed glyph
   locationTable.offsetsArray.add(0);
+  postTable.glyphNameIndex.add(0); //.notDef
+  var nameOffset = 258; //index offset to custom names
   var offset = addGlyphElement(glyphTable, font, font.missedGlyph).length;
+
   _.forEach(font.glyphs, function (glyph) {
+    //add offset
     locationTable.offsetsArray.add(offset);
+    //add glyph
     offset += addGlyphElement(glyphTable, font, glyph).length;
+    //add name
+    postTable.names.add(getGlyphNameAsBytesArray(glyph.name));
+    postTable.glyphNameIndex.add(nameOffset ++);
   });
   locationTable.offsetsArray.add(offset);
 }
