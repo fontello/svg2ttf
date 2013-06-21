@@ -12,43 +12,27 @@ var _ = require('lodash');
 var svg_font = require("./lib/svg_font");
 var TTF = require("./lib/ttf");
 
-//------------------table initialization---------------------
-
-
-
 //----------------conversion-----------------------------
 
-function getGlyphEndPtsOfContours(transform, numberOfContours) {
-  return [0]; // just a stub for now
-}
-
-function getGlyphFlags(transform) {
-  return [1]; // just a stub for now
-}
-
-function getGlyphXCoordinates(transform) {
-  return [0, 100]; // just a stub for now
-}
-
-function getGlyphYCoordinates(transform) {
-  return [0, 200]; // just a stub for now
-}
-
-function addGlyphElement(glyphTable, glyphObject) {
-  // just a stub for now
-  var numberOfContours = 1;
-  var transform = glyphObject.transform;
-  var glyph = glyphTable.glyfArray.createElement();
-  glyph.numberOfContours = numberOfContours;
+function addGlyphMetrics(glyph, font, svgGlyph) {
+  //just a stub now, draws rectangle
+  glyph.numberOfContours = 1;
   glyph.xMin = 0;
   glyph.yMin = 0;
-  glyph.xMax = glyphObject.width;
-  glyph.yMax = glyphObject.height;
-  glyph.endPtsOfContoursArray.add(getGlyphEndPtsOfContours(transform, numberOfContours));
-  glyph.endPtsOfContoursArray.add(getGlyphEndPtsOfContours(transform, numberOfContours));
-  glyph.flagsArray.add(getGlyphFlags(transform));
-  glyph.xCoordinatesArray.add(getGlyphXCoordinates(transform));
-  glyph.yCoordinatesArray.add(getGlyphYCoordinates(transform));
+  glyph.xMax = svgGlyph.width;
+  glyph.yMax = svgGlyph.height;
+  glyph.endPtsOfContoursArray.add([4]); //four points
+  glyph.flagsArray.add([1, 1, 1, 1, 1]); //not curves
+  //each pair of coordinates is a vector from previous coordinate
+  glyph.xCoordinatesArray.add([0, 0, 800, 0, - 800]);
+  glyph.yCoordinatesArray.add([0, 800, 0, - 800, 0]);
+}
+
+function addGlyphElement(glyphTable, font, svgGlyph) {
+  // just a stub for now
+  var numberOfContours = 1;
+  var glyph = glyphTable.glyfArray.createElement();
+  addGlyphMetrics(glyph, font, svgGlyph);
   glyphTable.glyfArray.add(glyph);
   return glyph;
 }
@@ -58,10 +42,10 @@ function fillGlyphs(tables, font) {
   var locationTable = tables.location;
   //add misssed glyph
   locationTable.offsetsArray.add(0);
-  var offset = addGlyphElement(glyphTable, font.missedGlyph).length;
+  var offset = addGlyphElement(glyphTable, font, font.missedGlyph).length;
   _.forEach(font.glyphs, function (glyph) {
     locationTable.offsetsArray.add(offset);
-    offset += addGlyphElement(glyphTable, glyph).length;
+    offset += addGlyphElement(glyphTable, font, glyph).length;
   });
   locationTable.offsetsArray.add(offset);
 }
@@ -87,18 +71,18 @@ function fillCmap(cmapTable, glyphs, glyphSegments) {
   if (glyphSegments.length > 0) {
     //calculate segment offsets
     var prevEndCode = 0;
-    var prevDelta = -1;
+    var prevDelta = - 1;
     var segCount = 1;
     _.forEach(glyphSegments, function (glyphSegment) {
       if (glyphSegment.start.unicode <= 0xFFFF) {
         subTable4.startCountArray.add(glyphSegment.start.unicode);
         subTable4.endCountArray.add(glyphSegment.end.unicode < 0xFFFF ? glyphSegment.end.unicode : 0xFFFF);
         var delta = prevEndCode - glyphSegment.start.unicode + prevDelta + 1;
-        subTable4.idDeltaArray.add(delta > 0x7FFF ? delta - 0x10000 : (delta < -0x7FFF ? delta + 0x10000 : delta));
+        subTable4.idDeltaArray.add(delta > 0x7FFF ? delta - 0x10000 : (delta < - 0x7FFF ? delta + 0x10000 : delta));
         subTable4.idRangeOffsetArray.add(0);
         prevEndCode = glyphSegment.end.unicode;
         prevDelta = delta;
-        segCount++;
+        segCount ++;
       }
     });
     subTable4.startCountArray.add(0xFFFF);
@@ -115,7 +99,7 @@ function fillCmap(cmapTable, glyphs, glyphSegments) {
     var i = 1;
     _.forEach(glyphs, function (glyph) {
       if (glyph.unicode <= 0xFFFF) {
-      subTable4.glyphIdArray.add(i++)
+        subTable4.glyphIdArray.add(i ++)
       }
     });
   }
@@ -141,7 +125,7 @@ function fillCmap(cmapTable, glyphs, glyphSegments) {
 
   //fill table headers
   var offset = 4 + cmapTable.headers.value[0].length * cmapTable.headers.value.length;
-  for (var i = 0; i < cmapTable.headers.value.length; i++) {
+  for (var i = 0; i < cmapTable.headers.value.length; i ++) {
     cmapTable.headers.value[i].offset = offset;
     if (i == 0)
       offset += cmapTable.subTable0.value[0].stLength;
