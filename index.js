@@ -62,12 +62,16 @@ function fillGlyphs(tables, font) {
   var glyphTable = tables.glyf;
   var locationTable = tables.location;
   var postTable = tables.post;
+  var hmtxTable = tables.hmtx;
   postTable.numberOfGlyphs = font.glyphs.length + 1;
   //add misssed glyph
   locationTable.offsetsArray.add(0);
   postTable.glyphNameIndex.add(0); //.notDef
   var nameOffset = 258; //index offset to custom names
   var offset = addGlyphElement(glyphTable, font, font.missedGlyph).length;
+  var hmtxElement = hmtxTable.hMetrics.createElement();
+  hmtxElement.advanceWidth = font.missedGlyph.width;
+  hmtxTable.hMetrics.add(hmtxElement);
 
   _.forEach(font.glyphs, function (glyph) {
     //add offset
@@ -77,6 +81,11 @@ function fillGlyphs(tables, font) {
     //add name
     postTable.names.add(getStringAsByteArray(glyph.name, true));
     postTable.glyphNameIndex.add(nameOffset ++);
+    //add width
+    hmtxElement = hmtxTable.hMetrics.createElement();
+    hmtxElement.advanceWidth = glyph.width;
+    hmtxTable.hMetrics.add(hmtxElement);
+
   });
   locationTable.offsetsArray.add(offset);
 }
@@ -167,6 +176,11 @@ function fillCmap(cmapTable, glyphs, glyphSegments) {
   }
 }
 
+function fillHHead(hheadTable, glyphs) {
+  //include missed glyph
+  hheadTable.numberOfHMetrics = glyphs.length + 1;
+}
+
 function fillMaxp(maxpTable, glyphs) {
   //include missed glyph
   maxpTable.numGlyphs = glyphs.length + 1;
@@ -199,6 +213,7 @@ function svg2ttf(svg, options, callback) {
   var ttf = new TTF();
   fillGlyphs(ttf.tables, font);
   fillCmap(ttf.tables.cmap, font.glyphs, font.segments);
+  fillHHead(ttf.tables.hHead, font.glyphs);
   fillMaxp(ttf.tables.maxp, font.glyphs);
   fillNames(ttf.tables.name, font);
   callback(null, ttf.toBuffer());
