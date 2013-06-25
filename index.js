@@ -30,8 +30,10 @@ function addGlyphMetrics(glyph, font, svgGlyph) {
   glyph.endPtsOfContoursArray.add([4]); //four points
   glyph.flagsArray.add([1, 1, 1, 1, 1]); //not curves
   //each pair of coordinates is a vector from previous coordinate
-  glyph.xCoordinatesArray.add([0, 0, 800, 0, - 800]);
-  glyph.yCoordinatesArray.add([0, 800, 0, - 800, 0]);
+  var x = font.fontHorizAdvX;
+  var y = font.ascent + font.descent;
+  glyph.xCoordinatesArray.add([100, 0, x - 100, 0, 100 - x]);
+  glyph.yCoordinatesArray.add([0, y, 0, - y, 0]);
 }
 
 function addGlyphElement(glyphTable, font, svgGlyph) {
