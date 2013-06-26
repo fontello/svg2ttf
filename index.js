@@ -27,13 +27,21 @@ function addGlyphMetrics(glyph, font, svgGlyph) {
   glyph.yMin = 0;
   glyph.xMax = svgGlyph.width;
   glyph.yMax = svgGlyph.height;
-  glyph.endPtsOfContoursArray.add([4]); //four points
-  glyph.flagsArray.add([1, 1, 1, 1, 1]); //not curves
-  //each pair of coordinates is a vector from previous coordinate
-  var x = font.fontHorizAdvX;
-  var y = font.ascent + font.descent;
-  glyph.xCoordinatesArray.add([100, 0, x - 100, 0, 100 - x]);
-  glyph.yCoordinatesArray.add([0, y, 0, - y, 0]);
+  var endPtsOfContours = -1;
+  var isFirstContour = true;
+  _.forEach(svgGlyph.ttfPath, function (command) {
+    if (command.startNewContour && ! isFirstContour) {
+      glyph.endPtsOfContoursArray.add(endPtsOfContours);
+      glyph.numberOfContours ++;
+    }
+    endPtsOfContours ++;
+    isFirstContour = false;
+    //each pair of coordinates is a vector from previous coordinate
+    glyph.xCoordinatesArray.add(command.x);
+    glyph.yCoordinatesArray.add(command.y);
+    glyph.flagsArray.add(command.flags); //not curves
+  });
+  glyph.endPtsOfContoursArray.add(endPtsOfContours);
 }
 
 function addGlyphElement(glyphTable, font, svgGlyph) {
@@ -51,7 +59,7 @@ function getStringAsByteArray(name, isPascalFormat) {
   if (isPascalFormat)
     bytes.push(name.length);
   for (var i = 0; i < name.length; i ++) {
-    if (!isPascalFormat)
+    if (! isPascalFormat)
       bytes.push(0);
     bytes.push(name.charCodeAt(i));
   }
