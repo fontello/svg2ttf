@@ -13,7 +13,7 @@ var svg_font = require("./lib/svg_font");
 var ttfFont = require("./lib/ttf_utils");
 var TTF = require("./lib/ttf");
 
-//------------------main---------------------------------
+//------------------Main---------------------------------
 
 function svg2ttf(svg, options, callback) {
   var font = svg_font(svg);
