@@ -10,7 +10,7 @@
 
 var _ = require('lodash');
 var svg_font = require("./lib/svg");
-var Font = require("./lib/font");
+var Font = require("./lib/sfmt");
 
 function loadSVG(svg) {
   var font = new Font.Font();
