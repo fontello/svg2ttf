@@ -10,7 +10,7 @@
 
 var _ = require('lodash');
 var svg_font = require("./lib/svg");
-var Font = require("./lib/sfmt");
+var Font = require("./lib/sfnt");
 var generateTTF = require("./lib/ttf");
 
 //------------------Main---------------------------------
