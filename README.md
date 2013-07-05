@@ -1,7 +1,7 @@
 svg2ttf
 ========
 
-svg2ttf converts SVG graphics to WOFF format. That can be useful for different
+svg2ttf converts SVG graphics to TTF format. That can be useful for different
 webfont generation tools.
 
 Usage
