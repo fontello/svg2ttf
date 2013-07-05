@@ -11,13 +11,19 @@
 var _ = require('lodash');
 var svg_font = require("./lib/svg");
 var Font = require("./lib/sfmt");
+var generateTTF = require("./lib/ttf");
 
-function loadSVG(svg) {
+//------------------Main---------------------------------
+
+function svg2ttf(svg, options, callback) {
   var font = new Font.Font();
   var svgFont = svg_font(svg);
+
   font.id = svgFont.id;
   font.familyName = svgFont.familyName;
   font.copyright = svgFont.copyright;
+  font.sfntNames.push({ id: 5, value: '1.0' }); // version ID for TTF name table
+
   _.forEach(svgFont.glyphs, function (svgGlyph) {
     var glyph = new Font.Glyph();
     glyph.id = svgGlyph.id;
@@ -27,8 +33,10 @@ function loadSVG(svg) {
     glyph.height = svgGlyph.height;
     glyph.width = svgGlyph.width;
     glyph.size = svgGlyph.size;
+
     _.forEach(svgGlyph.contours, function (svgContour) {
       var contour = new Font.Contour();
+
       _.forEach(svgContour.getQuadSplinePoints(), function (svgPoint) {
         var point = new Font.Point();
         point.x = svgPoint.x;
@@ -38,16 +46,11 @@ function loadSVG(svg) {
       });
       glyph.contours.push(contour);
     });
+
     font.glyphs.push(glyph);
   });
-  return font;
-}
 
-//------------------Main---------------------------------
-
-function svg2ttf(svg, options, callback) {
-  var font = loadSVG(svg);
-  callback(null, font.generateTTF());
+  callback(null, generateTTF(font));
 }
 
 module.exports = svg2ttf;
