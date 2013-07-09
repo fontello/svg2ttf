@@ -31,6 +31,8 @@ function svg2ttf(svg, options, callback) {
   font.weightClass = svgFont.weightClass;
   font.width = svgFont.width;
   font.height = svgFont.height;
+  font.ascent = svgFont.ascent;
+  font.descent = svgFont.descent;
   _.forEach(svgFont.glyphs, function (svgGlyph) {
     var glyph = new Font.Glyph();
     glyph.id = svgGlyph.id;
