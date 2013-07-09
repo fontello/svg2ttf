@@ -27,6 +27,10 @@ function svg2ttf(svg, options, callback) {
   font.familyName = svgFont.familyName;
   font.copyright = svgFont.copyright;
   font.sfntNames.push({ id: 5, value: '1.0' }); // version ID for TTF name table
+  font.unitsPerEm = svgFont.unitsPerEm;
+  font.weightClass = svgFont.weightClass;
+  font.width = svgFont.width;
+  font.height = svgFont.height;
   _.forEach(svgFont.glyphs, function (svgGlyph) {
     var glyph = new Font.Glyph();
     glyph.id = svgGlyph.id;
@@ -35,7 +39,6 @@ function svg2ttf(svg, options, callback) {
     glyph.isMissed = svgGlyph.isMissed;
     glyph.height = svgGlyph.height;
     glyph.width = svgGlyph.width;
-    glyph.size = svgGlyph.size;
 
     //SVG transformations
     var svgPoints = svgPathParse(svgGlyph);
