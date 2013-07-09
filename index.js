@@ -15,6 +15,7 @@ var generateTTF = require("./lib/ttf");
 var svgPathParse = require("./lib/svg/path_parse");
 var svgConvertToRelative = require("./lib/svg/to_relative_points");
 var svgConvertSmoothCurves = require("./lib/svg/to_generic_curves");
+var svgConvertCubicToQuadCurves = require("./lib/svg/cubic_to_quad_curves");
 var svgToContours = require("./lib/svg/to_contours");
 
 //------------------Main---------------------------------
@@ -46,6 +47,7 @@ function svg2ttf(svg, options, callback) {
     var svgPoints = svgPathParse(svgGlyph);
     svgPoints = svgConvertToRelative(svgPoints);
     svgPoints = svgConvertSmoothCurves(svgPoints);
+    svgPoints = svgConvertCubicToQuadCurves(svgPoints);
     var svgContours = svgToContours(svgPoints);
 
     // Add contours to SFNT font
