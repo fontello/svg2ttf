@@ -13,10 +13,8 @@ var svg_font = require("./lib/svg");
 var Font = require("./lib/sfnt");
 var generateTTF = require("./lib/ttf");
 var svgPathParse = require("./lib/svg/path_parse");
-var svgConvertToRelative = require("./lib/svg/to_relative_points");
-var svgConvertSmoothCurves = require("./lib/svg/to_generic_curves");
-var svgConvertCubicToQuadCurves = require("./lib/svg/cubic_to_quad_curves");
-var svgToContours = require("./lib/svg/to_contours");
+var convertCubicToQuadCurves = require("./lib/svg/cubic_to_quad_curves");
+var toSFMTContours = require("./lib/svg/to_sfmt_contours");
 
 //------------------Main---------------------------------
 
@@ -44,82 +42,23 @@ function svg2ttf(svg, options, callback) {
     glyph.width = svgGlyph.width;
 
     //SVG transformations
-    var svgPoints = svgPathParse(svgGlyph);
-    svgPoints = svgConvertToRelative(svgPoints);
-    svgPoints = svgConvertSmoothCurves(svgPoints);
-    svgPoints = svgConvertCubicToQuadCurves(svgPoints);
-    var svgContours = svgToContours(svgPoints);
+    var svgContours = svgPathParse(svgGlyph);
+    var convertedContours = convertCubicToQuadCurves(svgContours);
+    var sfmtContours = toSFMTContours(convertedContours);
 
     // Add contours to SFNT font
-    _.forEach(svgContours, function (svgContour) {
+    _.forEach(sfmtContours, function (sfmtContour) {
       var contour = new Font.Contour();
 
-      _.forEach(svgContour.points, function (svgPoint) {
+      _.forEach(sfmtContour, function (sfmtPoint) {
         var point = new Font.Point();
-        point.x = svgPoint.x;
-        point.y = svgPoint.y;
-        point.onCurve = svgPoint.onCurve;
+        point.x = sfmtPoint.x;
+        point.y = sfmtPoint.y;
+        point.onCurve = sfmtPoint.onCurve;
         contour.points.push(point);
       });
       glyph.contours.push(contour);
     });
-
-
-      /*var contour = new Font.Contour();
-      var point = new Font.Point();
-      point.x = 200;
-      point.y = 200;
-      point.onCurve = 1;
-      contour.points.push(point);
-    var point = new Font.Point();
-    point.x = 0;
-    point.y = 1000;
-    point.onCurve = 1;
-    contour.points.push(point);
-    var point = new Font.Point();
-    point.x = 1000;
-    point.y = 0;
-    point.onCurve = 1;
-    contour.points.push(point);
-    var point = new Font.Point();
-    point.x = 0;
-    point.y = -1000;
-    point.onCurve = 1;
-    contour.points.push(point);
-    var point = new Font.Point();
-    point.x = -1000;
-    point.y = 0;
-    point.onCurve = 1;
-    contour.points.push(point);
-    glyph.contours.push(contour);
-
-    var contour = new Font.Contour();
-    var point = new Font.Point();
-    point.x = 50;
-    point.y = 50;
-    point.onCurve = 1;
-    contour.points.push(point);
-    var point = new Font.Point();
-    point.x = 0;
-    point.y = 800;
-    point.onCurve = 1;
-    contour.points.push(point);
-    var point = new Font.Point();
-    point.x = 800;
-    point.y = 0;
-    point.onCurve = 1;
-    contour.points.push(point);
-    var point = new Font.Point();
-    point.x = 0;
-    point.y = -800;
-    point.onCurve = 1;
-    contour.points.push(point);
-    var point = new Font.Point();
-    point.x = -800;
-    point.y = 0;
-    point.onCurve = 1;
-    contour.points.push(point);
-    glyph.contours.push(contour);*/
 
     font.glyphs.push(glyph);
   });
