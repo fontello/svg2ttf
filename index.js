@@ -9,12 +9,41 @@
 'use strict';
 
 var _ = require('lodash');
+var math = require('./lib/math')
 var svg_font = require("./lib/svg");
 var Font = require("./lib/sfnt");
 var generateTTF = require("./lib/ttf");
 var svgPathParse = require("./lib/svg/path_parse");
-var convertCubicToQuadCurves = require("./lib/svg/cubic_to_quad_curves");
 var toSFMTContours = require("./lib/svg/to_sfmt_contours");
+
+function convertCubicToQuadCurves(contours) {
+  var resContours = [];
+  var resContour;
+  var prevCommand;
+  _.forEach(contours, function (contour) {
+
+    //start new contour
+    resContour = [];
+    resContours.push(resContour);
+
+    _.forEach(contour, function (command) {
+
+      if (command.isQubicCurve) {
+        var resultCurves = math.convertToQuadPoints(math.Point(prevCommand.x, prevCommand.y), math.Point(command.x1, command.y1), math.Point(command.x2, command.y2), math.Point(command.x, command.y));
+        //add quadratic curves interpolated from qubic curve
+        _.forEach(resultCurves, function(curve) {
+          resContour.push({ x1: curve[0].x, y1: curve[0].y, x: curve[0].x, y: curve[0].y, isCurve: true, isQuadCurve: true });
+        });
+      }
+      else {
+        resContour.push(_.cloneDeep(command));
+      }
+
+      prevCommand = command;
+    });
+  });
+  return resContours;
+}
 
 //------------------Main---------------------------------
 
