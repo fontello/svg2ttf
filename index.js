@@ -29,7 +29,7 @@ function convertCubicToQuadCurves(contours) {
     _.forEach(contour, function (command) {
 
       if (command.isQubicCurve) {
-        var resultCurves = math.convertToQuadPoints(math.Point(prevCommand.x, prevCommand.y), math.Point(command.x1, command.y1), math.Point(command.x2, command.y2), math.Point(command.x, command.y));
+        var resultCurves = math.convertToQuadPointsBSpline(math.Point(prevCommand.x, prevCommand.y), math.Point(command.x1, command.y1), math.Point(command.x2, command.y2), math.Point(command.x, command.y));
         //add quadratic curves interpolated from qubic curve
         _.forEach(resultCurves, function(curve) {
           resContour.push({ x1: curve[0].x, y1: curve[0].y, x: curve[1].x, y: curve[1].y, isCurve: true, isQuadCurve: true });
