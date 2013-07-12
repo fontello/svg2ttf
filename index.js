@@ -9,7 +9,7 @@
 'use strict';
 
 var _ = require('lodash');
-var math = require('./lib/math')
+var math = require('./lib/math');
 var svg_font = require("./lib/svg");
 var Font = require("./lib/sfnt");
 var generateTTF = require("./lib/ttf");
@@ -29,7 +29,7 @@ function convertCubicToQuadCurves(contours) {
     _.forEach(contour, function (command) {
 
       if (command.isQubicCurve) {
-        var resultCurves = math.convertToQuadPointsBSpline(math.Point(prevCommand.x, prevCommand.y), math.Point(command.x1, command.y1), math.Point(command.x2, command.y2), math.Point(command.x, command.y));
+        var resultCurves = math.convertToQuadPoints(math.Point(prevCommand.x, prevCommand.y), math.Point(command.x1, command.y1), math.Point(command.x2, command.y2), math.Point(command.x, command.y));
         //add quadratic curves interpolated from qubic curve
         _.forEach(resultCurves, function(curve) {
           resContour.push({ x1: curve[1].x, y1: curve[1].y, x: curve[2].x, y: curve[2].y, isCurve: true, isQuadCurve: true });
