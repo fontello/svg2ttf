@@ -4,8 +4,8 @@ svg2ttf
 svg2ttf converts SVG graphics to TTF format. That can be useful for different
 webfont generation tools.
 
-Usage
------
+Usaging from CLI
+----------------
 
 Install:
 
@@ -19,11 +19,33 @@ Usage example:
 svg2ttf fontello.svg fontello.ttf
 ```
 
+API
+---
+
+We use [jDataView](https://github.com/fontello/svg2ttf) to work with binary buffers.
+That's universal abstraction layer for both node.js & browser.
+
+### svg2ttf(svgFontString, options) -> buf
+
+- `svgFontString` - SVG font content
+- `options` - not used yet
+- `buf` - jDataView with ttf's content
+
+Example:
+
+``` javascript
+var fs = require('fs');
+var svg2ttf = require('svg2ttf');
+
+var ttf = svg2ttf(fs.readFileSync('myfont.svg'));
+fs.writeFileSync('myfont.ttf', ttf.buffer);
+```
 
 Authors
 -------
 
-* Sergey Batishchev <sergej.batishchev@gmail.com>
+* Sergey Batishchev - [@snb2013](https://github.com/snb2013)
+* Vitaly Puzrin - [@puzrin](https://github.com/puzrin)
 
 
 License

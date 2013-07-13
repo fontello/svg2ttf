@@ -1,9 +1,8 @@
 /*
- Author: Sergey Batishchev <snb2003@rambler.ru>
-
- Written for fontello.com project.
-
- TTF file structure is based on https://developer.apple.com/fonts/TTRefMan/RM06/Chap6.html
+ * Copyright: Vitaly Puzrin 
+ * Author: Sergey Batishchev <snb2003@rambler.ru>
+ *
+ * Written for fontello.com project.
  */
 
 'use strict';
@@ -52,7 +51,7 @@ function convertCubicToQuadCurves(contours) {
 
 //------------------Main---------------------------------
 
-function svg2ttf(svg, options, callback) {
+function svg2ttf(svg, options) {
   var font = new Font.Font();
   var svgFont = svg_font(svg);
 
@@ -99,7 +98,7 @@ function svg2ttf(svg, options, callback) {
     font.glyphs.push(glyph);
   });
 
-  callback(null, generateTTF(font));
+  return generateTTF(font);
 }
 
 module.exports = svg2ttf;

@@ -39,7 +39,7 @@ parser.addArgument(
 parser.addArgument(
   ['-m', '--metadata'],
   {
-    help: 'Metadata XML file (optional)',
+    help: 'Metadata JSON file (optional)',
     required: false
   }
 );
@@ -57,18 +57,16 @@ try {
 
 if (args.metadata) {
   try {
-    options.metadata = fs.readFileSync (args.metadata);
+    options.metadata = JSON.parse(fs.readFileSync(args.metadata));
   } catch(e) {
-    console.error("Can't open metadata file (%s)", args.infile);
+    console.error("Can't open/parse metadata file (%s)", args.metadata);
     process.exit(1);
   }
 }
 
-svg2ttf(svg, options, function (err, ttf) {
-  if (err) {
-    console.log(err);
-    return;
-  }
-  fs.writeFileSync(args.outfile[0], ttf);
-});
-
+try {
+  var ttf = svg2ttf(svg, options);
+  fs.writeFileSync(args.outfile[0], ttf.buffer);
+} catch (err) {
+  console.log(err);
+}
