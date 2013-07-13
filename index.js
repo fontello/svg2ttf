@@ -8,52 +8,12 @@
 'use strict';
 
 var _ = require('lodash');
-var math = require('./lib/math');
-var svg_font = require("./lib/svg");
-var Font = require("./lib/sfnt");
-var generateTTF = require("./lib/ttf");
-var svgPathParse = require("./lib/svg/path_parse");
-var toSFMTContours = require("./lib/svg/to_sfmt_contours");
+var svg = require("./lib/svg");
+var sfnt = require("./lib/sfnt");
 
-function convertCubicToQuadCurves(contours) {
-  var resContours = [];
-  var resContour;
-  var prevCommand;
-  _.forEach(contours, function (contour) {
-
-    //start new contour
-    resContour = [];
-    resContours.push(resContour);
-
-    _.forEach(contour, function (command) {
-
-      if (command.isQubicCurve) {
-        var resultCurves = math.bezierCubicToQuad(
-          math.Point(prevCommand.x, prevCommand.y),
-          math.Point(command.x1, command.y1),
-          math.Point(command.x2, command.y2),
-          math.Point(command.x, command.y)
-        );
-        //add quadratic curves interpolated from qubic curve
-        _.forEach(resultCurves, function(curve) {
-          resContour.push({ x1: curve[1].x, y1: curve[1].y, x: curve[2].x, y: curve[2].y, isCurve: true, isQuadCurve: true });
-        });
-      }
-      else {
-        resContour.push(_.cloneDeep(command));
-      }
-
-      prevCommand = command;
-    });
-  });
-  return resContours;
-}
-
-//------------------Main---------------------------------
-
-function svg2ttf(svg, options) {
-  var font = new Font.Font();
-  var svgFont = svg_font(svg);
+function svg2ttf(svgString /*, options*/) {
+  var font = new sfnt.Font();
+  var svgFont = svg.load(svgString);
 
   font.id = svgFont.id;
   font.familyName = svgFont.familyName;
@@ -67,7 +27,7 @@ function svg2ttf(svg, options) {
   font.descent = svgFont.descent;
 
   _.forEach(svgFont.glyphs, function (svgGlyph) {
-    var glyph = new Font.Glyph();
+    var glyph = new sfnt.Glyph();
 
     glyph.id = svgGlyph.id;
     glyph.unicode = svgGlyph.unicode;
@@ -77,28 +37,29 @@ function svg2ttf(svg, options) {
     glyph.width = svgGlyph.width;
 
     //SVG transformations
-    var svgContours = svgPathParse(svgGlyph);
-    var convertedContours = convertCubicToQuadCurves(svgContours);
-    var sfmtContours = toSFMTContours(convertedContours);
+    var svgContours = svg.pathParse(svgGlyph);
+    svgContours = svg.cubicToQuad(svgContours);
+    var sfntContours = svg.toSfntCoutours(svgContours);
 
     // Add contours to SFNT font
-    _.forEach(sfmtContours, function (sfmtContour) {
-      var contour = new Font.Contour();
+    glyph.contours = _.map(sfntContours, function (sfntContour) {
+      var contour = new sfnt.Contour();
 
-      _.forEach(sfmtContour, function (sfmtPoint) {
-        var point = new Font.Point();
-        point.x = sfmtPoint.x;
-        point.y = sfmtPoint.y;
-        point.onCurve = sfmtPoint.onCurve;
-        contour.points.push(point);
+      contour.points = _.map(sfntContour, function (sfntPoint) {
+        var point = new sfnt.Point();
+        point.x = sfntPoint.x;
+        point.y = sfntPoint.y;
+        point.onCurve = sfntPoint.onCurve;
+        return point;
       });
-      glyph.contours.push(contour);
+
+      return contour;
     });
 
     font.glyphs.push(glyph);
   });
 
-  return generateTTF(font);
+  return sfnt.toTTF(font);
 }
 
 module.exports = svg2ttf;
