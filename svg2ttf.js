@@ -64,9 +64,4 @@ if (args.metadata) {
   }
 }
 
-try {
-  var ttf = svg2ttf(svg, options);
-  fs.writeFileSync(args.outfile[0], ttf.buffer);
-} catch (err) {
-  console.log(err);
-}
+fs.writeFileSync(args.outfile[0], svg2ttf(svg, options).buffer);
