@@ -1,10 +1,17 @@
 svg2ttf
 ========
 
-svg2ttf converts SVG graphics to TTF format. That can be useful for different
-webfont generation tools.
+svg2ttf converts SVG graphics to TTF format. It was written for
+[Fontello](http://fontello.com), but you can find it useful for your projects.
 
-Usaging from CLI
+For developpers: internal API is similar to FontForge's one. Since primary goal
+is generating iconic fonts, sources can lack some spesific TTF/OTF features,
+like kerning and so on. Anyway, current code is a good base for development,
+because it will save you tons of hours to implement correct writing & optimizing
+TTF tables.
+
+
+Using from CLI
 ----------------
 
 Install:
