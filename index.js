@@ -38,7 +38,7 @@ function svg2ttf(svgString /*, options*/) {
 
     //SVG transformations
     var svgContours = svg.pathParse(svgGlyph);
-    svgContours = svg.cubicToQuad(svgContours);
+    svgContours = svg.cubicToQuad(svgContours, 0.3);
     var sfntContours = svg.toSfntCoutours(svgContours);
 
     // Add contours to SFNT font
