@@ -26,6 +26,17 @@ lint:
 		fi
 	jshint . --show-non-errors
 
+test: lint
+
+dev-deps:
+	@if test ! `which npm` ; then \
+		echo "You need 'npm' installed." >&2 ; \
+		echo "  See: http://npmjs.org/" >&2 ; \
+		exit 128 ; \
+		fi
+	npm install -g jshint
+	npm install
+
 
 publish:
 	@if test 0 -ne `git status --porcelain | wc -l` ; then \
