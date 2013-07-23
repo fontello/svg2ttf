@@ -16,8 +16,10 @@ function svg2ttf(svgString /*, options*/) {
   var svgFont = svg.load(svgString);
 
   font.id = svgFont.id;
-  font.familyName = svgFont.familyName;
+  font.familyName = svgFont.familyName || svgFont.id;
   font.copyright = svgFont.copyright;
+  font.sfntNames.push({ id: 2, value: 'regular' }); // subfamily name
+  font.sfntNames.push({ id: 4, value: svgFont.id }); // full name
   font.sfntNames.push({ id: 5, value: '1.0' }); // version ID for TTF name table
   font.unitsPerEm = svgFont.unitsPerEm;
   font.weightClass = svgFont.weightClass;
