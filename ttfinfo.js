@@ -27,6 +27,15 @@ parser.addArgument(
   }
 );
 
+parser.addArgument(
+  ['-d', '--details'],
+  {
+    help: 'Show table dump',
+    action: 'storeTrue',
+    required: false
+  }
+);
+
 var args = parser.parseArgs();
 var ttf;
 
@@ -59,4 +68,22 @@ console.log(format('Tables count: %d'), tablesCount);
 
 _.forEach(_.sortBy(headers, 'offset'), function (info) {
   console.log("- %s: %d bytes (%d offset)", info.name, info.length, info.offset);
+  if (args.details) {
+    var bufTable = ttf.slice(info.offset, info.offset + info.length);
+    var count = Math.floor(bufTable.length / 32);
+    var offset = 0;
+
+    //split buffer to the small chunks to fit the screen
+    for (var i = 0; i < count; i++) {
+      console.log(bufTable.slice(offset, offset + 32));
+      offset += 32;
+    }
+
+    //output the rest
+    if (offset < (info.length)) {
+      console.log(bufTable.slice(offset, info.length));
+    }
+
+    console.log("");
+  }
 });
