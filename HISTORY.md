@@ -1,3 +1,10 @@
+1.0.2 / --
+------------------
+
+* Fixed htmx table size
+* Fixed loca table size for long format
+
+
 1.0.1 / 2013-07-24
 ------------------
 
