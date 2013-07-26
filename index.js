@@ -11,15 +11,17 @@ var _ = require('lodash');
 var svg = require("./lib/svg");
 var sfnt = require("./lib/sfnt");
 
-function svg2ttf(svgString /*, options*/) {
+function svg2ttf(svgString, options) {
   var font = new sfnt.Font();
   var svgFont = svg.load(svgString);
 
-  font.id = svgFont.id;
-  font.familyName = svgFont.familyName || svgFont.id;
-  font.copyright = svgFont.copyright;
-  font.sfntNames.push({ id: 2, value: 'regular' }); // subfamily name
-  font.sfntNames.push({ id: 4, value: svgFont.id }); // full name
+  options = options || {};
+
+  font.id = options.id || svgFont.id;
+  font.familyName = options.familyname || svgFont.familyName || svgFont.id;
+  font.copyright = options.copyright || svgFont.metadata;
+  font.sfntNames.push({ id: 2, value: options.subfamilyname || 'Regular' }); // subfamily name
+  font.sfntNames.push({ id: 4, value: options.fullname || svgFont.id }); // full name
   font.sfntNames.push({ id: 5, value: '1.0' }); // version ID for TTF name table
   font.unitsPerEm = svgFont.unitsPerEm;
   font.weightClass = svgFont.weightClass;
