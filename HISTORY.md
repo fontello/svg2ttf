@@ -1,3 +1,9 @@
+1.0.3 / 2013-08-02
+------------------
+
+* Fixed maxp table max points count (solved chrome problems under windozze)
+
+
 1.0.2 / 2013-07-24
 ------------------
 
