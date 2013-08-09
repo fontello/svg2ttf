@@ -1,4 +1,4 @@
-1.0.4 / ?
+1.0.4 / 2013-08-09
 ------------------
 
 * Fixed importing into OSX Font Book
