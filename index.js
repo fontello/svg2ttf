@@ -23,7 +23,7 @@ function svg2ttf(svgString, options) {
   font.sfntNames.push({ id: 2, value: options.subfamilyname || 'Regular' }); // subfamily name
   font.sfntNames.push({ id: 4, value: options.fullname || svgFont.id }); // full name
   font.sfntNames.push({ id: 5, value: 'Version 1.0' }); // version ID for TTF name table
-  font.sfntNames.push({ id: 6, value: options.fullname || svgFont.id }); // Postscript name for the font
+  font.sfntNames.push({ id: 6, value: options.fullname || svgFont.id }); // Postscript name for the font, required for OSX Font Book
   font.unitsPerEm = svgFont.unitsPerEm;
   font.weightClass = svgFont.weightClass;
   font.width = svgFont.width;
