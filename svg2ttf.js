@@ -21,6 +21,14 @@ var parser = new ArgumentParser({
 });
 
 parser.addArgument(
+  [ '-c', '--copyright' ],
+  {
+    help: 'Copyright text',
+    required: false
+  }
+);
+
+parser.addArgument(
   [ 'infile' ],
   {
     nargs: 1,
@@ -36,13 +44,6 @@ parser.addArgument(
   }
 );
 
-parser.addArgument(
-  ['-m', '--metadata'],
-  {
-    help: 'Metadata JSON file (optional)',
-    required: false
-  }
-);
 
 var args = parser.parseArgs();
 var svg;
@@ -55,13 +56,8 @@ try {
   process.exit(1);
 }
 
-if (args.metadata) {
-  try {
-    options.metadata = JSON.parse(fs.readFileSync(args.metadata));
-  } catch(e) {
-    console.error("Can't open/parse metadata file (%s)", args.metadata);
-    process.exit(1);
-  }
+if (args.copyright) {
+  options.copyright = args.copyright;
 }
 
 fs.writeFileSync(args.outfile[0], svg2ttf(svg, options).buffer);
