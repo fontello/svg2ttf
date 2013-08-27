@@ -24,12 +24,17 @@ function svg2ttf(svgString, options) {
   font.sfntNames.push({ id: 4, value: options.fullname || svgFont.id }); // full name
   font.sfntNames.push({ id: 5, value: 'Version 1.0' }); // version ID for TTF name table
   font.sfntNames.push({ id: 6, value: options.fullname || svgFont.id }); // Postscript name for the font, required for OSX Font Book
-  font.unitsPerEm = svgFont.unitsPerEm;
-  font.weightClass = svgFont.weightClass;
-  font.width = svgFont.width;
-  font.height = svgFont.height;
-  font.ascent = svgFont.ascent;
-  font.descent = svgFont.descent;
+
+  // Try to fill font metrics or guess defaults
+  //
+  font.unitsPerEm = svgFont.unitsPerEm || 1000;
+  // need to correctly convert text values, use default (400) until compleete
+  //font.weightClass = svgFont.weightClass;
+  font.width = svgFont.width || svgFont.unitsPerEm;
+  font.height = svgFont.height || svgFont.unitsPerEm;
+  font.descent = (svgFont.descent !== undefined) ? svgFont.descent : -Math.ceil(svgFont.unitsPerEm * 0.15);
+  font.ascent = svgFont.ascent || (font.unitsPerEm + font.descent);
+
 
   _.forEach(svgFont.glyphs, function (svgGlyph) {
     var glyph = new sfnt.Glyph();
@@ -38,8 +43,8 @@ function svg2ttf(svgString, options) {
     glyph.unicode = svgGlyph.unicode;
     glyph.name = svgGlyph.name;
     glyph.isMissed = svgGlyph.isMissed;
-    glyph.height = svgGlyph.height;
-    glyph.width = svgGlyph.width;
+    glyph.height = svgGlyph.height || font.height;
+    glyph.width = svgGlyph.width || font.width;
 
     //SVG transformations
     var svgContours = svg.pathParse(svgGlyph);
