@@ -1,3 +1,9 @@
+1.0.6 / ?
+------------------
+
+- Fixed crash on glyphs with horizontal and vertical lines.
+
+
 1.0.5 / 2013-08-27
 ------------------
 
