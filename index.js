@@ -47,7 +47,7 @@ function svg2ttf(svgString, options) {
     glyph.width = svgGlyph.width || font.width;
 
     //SVG transformations
-    var svgContours = svg.pathParse(svgGlyph);
+    var svgContours = svg.pathParse(svgGlyph.d);
     svgContours = svg.cubicToQuad(svgContours, 0.3);
     var sfntContours = svg.toSfntCoutours(svgContours);
 
