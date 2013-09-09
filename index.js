@@ -14,6 +14,7 @@ var sfnt = require("./lib/sfnt");
 function svg2ttf(svgString, options) {
   var font = new sfnt.Font();
   var svgFont = svg.load(svgString);
+  var glyph;
 
   options = options || {};
 
@@ -35,19 +36,84 @@ function svg2ttf(svgString, options) {
   font.descent = (svgFont.descent !== undefined) ? svgFont.descent : -Math.ceil(svgFont.unitsPerEm * 0.15);
   font.ascent = svgFont.ascent || (font.unitsPerEm + font.descent);
 
+  var glyphs = font.glyphs;
 
+  // add SVG glyphs to SFNT font
   _.forEach(svgFont.glyphs, function (svgGlyph) {
-    var glyph = new sfnt.Glyph();
+    glyph = new sfnt.Glyph();
 
-    glyph.id = svgGlyph.id;
     glyph.unicode = svgGlyph.unicode;
     glyph.name = svgGlyph.name;
-    glyph.isMissed = svgGlyph.isMissed;
+    glyph.d = svgGlyph.d;
     glyph.height = svgGlyph.height || font.height;
     glyph.width = svgGlyph.width || font.width;
+    glyphs.push(glyph);
+  });
+
+  // add missing glyph to SFNT font
+  if (svgFont.missingGlyph) {
+    glyph = new sfnt.Glyph();
+    glyph.unicode = 0;
+    glyph.d = svgFont.missingGlyph.d;
+    glyph.height = svgFont.missingGlyph.height || font.height;
+    glyph.width = svgFont.missingGlyph.width || font.width;
+    glyphs.push(glyph);
+  }
+
+  var notDefGlyph = _.find(glyphs, function(glyph) {
+    return glyph.name === '.notdef';
+  });
+
+  //check missing glyph existance and single instance
+  if (svgFont.missingGlyph) {
+    if (notDefGlyph) { //duplicate definition, we need to remove .notdef glyph
+      glyphs.splice(_.indexOf(glyphs, notDefGlyph), 1);
+    }
+
+  } else if (notDefGlyph) { // .notdef glyph is exists, we need to set its unicode to 0
+    notDefGlyph.unicode = 0;
+
+  } else { // no missing glyph and .notdef glyph, we need to create missing glyph
+    glyph = new sfnt.Glyph();
+
+    glyph.unicode = 0;
+    glyphs.push(glyph);
+  }
+
+  var maxUnicode = glyphs.length ? _.max(glyphs, 'unicode').unicode : 0;
+
+  // add unicodes if empty
+  _.forEach(glyphs, function(glyph) {
+    if (glyph.unicode === undefined) {
+      maxUnicode++;
+      glyph.unicode = maxUnicode;
+    }
+  });
+
+  // add names if empty
+  _.forEach(glyphs, function(glyph) {
+    if (!glyph.name) {
+      glyph.name = 'item' + glyph.unicode;
+    }
+  });
+
+  // sort glyphs by unicode
+  glyphs.sort(function (a, b) {
+    return a.unicode < b.unicode ? -1 : 1;
+  });
+
+  var nextID = 0;
+
+  //add IDs
+  _.forEach(glyphs, function(glyph) {
+    glyph.id = nextID;
+    nextID++;
+  });
+
+  _.forEach(glyphs, function (glyph) {
 
     //SVG transformations
-    var svgContours = svg.pathParse(svgGlyph.d);
+    var svgContours = svg.pathParse(glyph.d);
     svgContours = svg.cubicToQuad(svgContours, 0.3);
     var sfntContours = svg.toSfntCoutours(svgContours);
 
@@ -65,8 +131,6 @@ function svg2ttf(svgString, options) {
 
       return contour;
     });
-
-    font.glyphs.push(glyph);
   });
 
   return sfnt.toTTF(font);
