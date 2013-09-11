@@ -14,7 +14,6 @@ var sfnt = require("./lib/sfnt");
 function svg2ttf(svgString, options) {
   var font = new sfnt.Font();
   var svgFont = svg.load(svgString);
-  var glyph;
 
   options = options || {};
 
@@ -40,7 +39,7 @@ function svg2ttf(svgString, options) {
 
   // add SVG glyphs to SFNT font
   _.forEach(svgFont.glyphs, function (svgGlyph) {
-    glyph = new sfnt.Glyph();
+    var glyph = new sfnt.Glyph();
 
     glyph.unicode = svgGlyph.unicode;
     glyph.name = svgGlyph.name;
@@ -50,56 +49,40 @@ function svg2ttf(svgString, options) {
     glyphs.push(glyph);
   });
 
-  // add missing glyph to SFNT font
-  if (svgFont.missingGlyph) {
-    glyph = new sfnt.Glyph();
-    glyph.unicode = 0;
-    glyph.d = svgFont.missingGlyph.d;
-    glyph.height = svgFont.missingGlyph.height || font.height;
-    glyph.width = svgFont.missingGlyph.width || font.width;
-    glyphs.push(glyph);
-  }
-
   var notDefGlyph = _.find(glyphs, function(glyph) {
     return glyph.name === '.notdef';
   });
 
-  //check missing glyph existance and single instance
+  // add missing glyph to SFNT font
+  // also, check missing glyph existance and single instance
+  var missingGlyph;
   if (svgFont.missingGlyph) {
+    missingGlyph = new sfnt.Glyph();
+    missingGlyph.unicode = 0;
+    missingGlyph.d = svgFont.missingGlyph.d;
+    missingGlyph.height = svgFont.missingGlyph.height || font.height;
+    missingGlyph.width = svgFont.missingGlyph.width || font.width;
+    glyphs.push(missingGlyph);
+
     if (notDefGlyph) { //duplicate definition, we need to remove .notdef glyph
       glyphs.splice(_.indexOf(glyphs, notDefGlyph), 1);
     }
-
   } else if (notDefGlyph) { // .notdef glyph is exists, we need to set its unicode to 0
     notDefGlyph.unicode = 0;
-
-  } else { // no missing glyph and .notdef glyph, we need to create missing glyph
-    glyph = new sfnt.Glyph();
-
-    glyph.unicode = 0;
-    glyphs.push(glyph);
   }
-
-  var maxUnicode = glyphs.length ? _.max(glyphs, 'unicode').unicode : 0;
-
-  // add unicodes if empty
-  _.forEach(glyphs, function(glyph) {
-    if (glyph.unicode === undefined) {
-      maxUnicode++;
-      glyph.unicode = maxUnicode;
-    }
-  });
-
-  // add names if empty
-  _.forEach(glyphs, function(glyph) {
-    if (!glyph.name) {
-      glyph.name = 'item' + glyph.unicode;
-    }
-  });
+  else { // no missing glyph and .notdef glyph, we need to create missing glyph
+    missingGlyph = new sfnt.Glyph();
+    missingGlyph.unicode = 0;
+    glyphs.push(missingGlyph);
+  }
 
   // sort glyphs by unicode
   glyphs.sort(function (a, b) {
-    return a.unicode < b.unicode ? -1 : 1;
+    if ((a.unicode === undefined) !== (b.unicode === undefined)) {
+      return b.unicode === undefined ? -1 : 1;
+    } else {
+      return a.unicode < b.unicode ? -1 : 1;
+    }
   });
 
   var nextID = 0;
