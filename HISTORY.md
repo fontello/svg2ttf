@@ -1,7 +1,9 @@
-1.0.6 / ?
+1.0.6 / 2013-09-12
 ------------------
 
-- Fixed crash on glyphs with horizontal and vertical lines.
+- Improved handling glyphs without codes or names
+- Fixed crash on glyphs with `v`/`h` commands
+- Logic cleanup
 
 
 1.0.5 / 2013-08-27
