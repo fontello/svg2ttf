@@ -60,4 +60,4 @@ if (args.copyright) {
   options.copyright = args.copyright;
 }
 
-fs.writeFileSync(args.outfile[0], svg2ttf(svg, options).buffer);
+fs.writeFileSync(args.outfile[0], new Buffer(svg2ttf(svg, options).buffer));
