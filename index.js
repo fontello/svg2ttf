@@ -96,7 +96,8 @@ function svg2ttf(svgString, options) {
   _.forEach(glyphs, function (glyph) {
 
     //SVG transformations
-    var svgContours = svg.pathParse(glyph.d);
+    var svgContours = svg.pathParse(glyph.d).toAbsolute();
+    svgContours = svg.smoothToGenericCurves(svgContours);
     svgContours = svg.cubicToQuad(svgContours, 0.3);
     var sfntContours = svg.toSfntCoutours(svgContours);
 
