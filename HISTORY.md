@@ -1,3 +1,10 @@
+1.1.0 / 2013-09-25
+------------------
+
+- Rewritten svg parser to improve speed
+- API changed, now returns buffer as array/Uint8Array
+
+
 1.0.7 / 2013-09-22
 ------------------
 
