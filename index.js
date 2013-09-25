@@ -96,10 +96,11 @@ function svg2ttf(svgString, options) {
   _.forEach(glyphs, function (glyph) {
 
     //SVG transformations
-    var svgContours = svg.pathParse(glyph.d).toAbsolute();
-    svgContours = svg.smoothToGenericCurves(svgContours);
-    svgContours = svg.cubicToQuad(svgContours, 0.3);
-    var sfntContours = svg.toSfntCoutours(svgContours);
+    var svgPath = svg.pathParse(glyph.d)
+      .abs()
+      .unshort()
+      .iterate(svg.cubicToQuad);
+    var sfntContours = svg.toSfntCoutours(svgPath);
 
     // Add contours to SFNT font
     glyph.contours = _.map(sfntContours, function (sfntContour) {
@@ -117,7 +118,8 @@ function svg2ttf(svgString, options) {
     });
   });
 
-  return sfnt.toTTF(font);
+  var ttf = sfnt.toTTF(font);
+  return ttf;
 }
 
 module.exports = svg2ttf;
