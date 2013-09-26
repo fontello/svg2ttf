@@ -1,3 +1,11 @@
+1.1.1 / 2013-09-26
+------------------
+
+- SVG parser moved to external package
+- Speed opts
+- Code refactoring/cleanup
+
+
 1.1.0 / 2013-09-25
 ------------------
 

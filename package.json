@@ -1,7 +1,7 @@
 {
   "name"            : "svg2ttf",
 
-  "version"         : "1.1.0",
+  "version"         : "1.1.1",
 
   "description"     : "Convert SVG graphics to TTF font",
   "keywords"        : ["font", "ttf", "svg", "convertor"],
