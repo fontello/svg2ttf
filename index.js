@@ -7,9 +7,10 @@
 
 'use strict';
 
-var _ = require('lodash');
-var svg = require("./lib/svg");
-var sfnt = require("./lib/sfnt");
+var _       = require('lodash');
+var SvgPath = require('svgpath');
+var svg     = require("./lib/svg");
+var sfnt    = require("./lib/sfnt");
 
 function svg2ttf(svgString, options) {
   var font = new sfnt.Font();
@@ -96,7 +97,7 @@ function svg2ttf(svgString, options) {
   _.forEach(glyphs, function (glyph) {
 
     //SVG transformations
-    var svgPath = svg.pathParse(glyph.d)
+    var svgPath = new SvgPath(glyph.d)
       .abs()
       .unshort()
       .iterate(svg.cubicToQuad);
