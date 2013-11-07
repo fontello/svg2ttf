@@ -29,7 +29,7 @@ svg2ttf fontello.svg fontello.ttf
 API
 ---
 
-We use [jDataView](https://github.com/fontello/svg2ttf) to work with binary buffers.
+We use [jDataView](https://github.com/jDataView/jDataView) to work with binary buffers.
 That's universal abstraction layer for both node.js & browser.
 
 ### svg2ttf(svgFontString, options) -> buf
