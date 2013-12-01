@@ -33,7 +33,9 @@ function svg2ttf(svgString, options) {
   //font.weightClass = svgFont.weightClass;
   font.width = svgFont.width || svgFont.unitsPerEm;
   font.height = svgFont.height || svgFont.unitsPerEm;
-  font.descent = (svgFont.descent !== undefined) ? svgFont.descent : -Math.ceil(svgFont.unitsPerEm * 0.15);
+  font.descent = 'number' === typeof svgFont.descent ?
+    svgFont.descent :
+    -Math.ceil(svgFont.unitsPerEm * 0.15);
   font.ascent = svgFont.ascent || (font.unitsPerEm + font.descent);
 
   var glyphs = font.glyphs;
