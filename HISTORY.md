@@ -1,6 +1,9 @@
-1.1.2 / ?
+1.1.2 / 2013-12-02
 ------------------
+
 - Fixed crash on SVG with empty <metadata> (#8)
+- Fixed descent when input font has descent = 0 (@nfroidure)
+
 
 1.1.1 / 2013-09-26
 ------------------
