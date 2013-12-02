@@ -1,5 +1,5 @@
 /*
- * Copyright: Vitaly Puzrin 
+ * Copyright: Vitaly Puzrin
  * Author: Sergey Batishchev <snb2003@rambler.ru>
  *
  * Written for fontello.com project.
@@ -9,8 +9,8 @@
 
 var _       = require('lodash');
 var SvgPath = require('svgpath');
-var svg     = require("./lib/svg");
-var sfnt    = require("./lib/sfnt");
+var svg     = require('./lib/svg');
+var sfnt    = require('./lib/sfnt');
 
 function svg2ttf(svgString, options) {
   var font = new sfnt.Font();
