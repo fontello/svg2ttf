@@ -28,13 +28,17 @@ function svg2ttf(svgString, options) {
 
   // Try to fill font metrics or guess defaults
   //
-  font.unitsPerEm = svgFont.unitsPerEm || 1000;
+  font.unitsPerEm   = svgFont.unitsPerEm || 1000;
+  font.horizOriginX = svgFont.horizOriginX || 0;
+  font.horizOriginY = svgFont.horizOriginY || 0;
+  font.vertOriginX  = svgFont.vertOriginX || 0;
+  font.vertOriginY  = svgFont.vertOriginY || 0;
   // need to correctly convert text values, use default (400) until compleete
   //font.weightClass = svgFont.weightClass;
-  font.width = svgFont.width || svgFont.unitsPerEm;
-  font.height = svgFont.height || svgFont.unitsPerEm;
-  font.descent = (svgFont.descent !== undefined) ? svgFont.descent : -Math.ceil(svgFont.unitsPerEm * 0.15);
-  font.ascent = svgFont.ascent || (font.unitsPerEm + font.descent);
+  font.width    = svgFont.width || svgFont.unitsPerEm;
+  font.height   = svgFont.height || svgFont.unitsPerEm;
+  font.descent  = !isNaN(svgFont.descent) ? svgFont.descent : -font.vertOriginY;
+  font.ascent   = svgFont.ascent || (font.unitsPerEm - font.vertOriginY);
 
   var glyphs = font.glyphs;
 
