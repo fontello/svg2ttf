@@ -1,3 +1,11 @@
+1.2.0 / 2014-10-05
+------------------
+
+- Fixed usWinAscent/usWinDescent - should not go below ascent/descent.
+- Upgraded ByteBuffer internal lib.
+- Code cleanup.
+
+
 1.1.2 / 2013-12-02
 ------------------
 
