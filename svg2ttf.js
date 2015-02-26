@@ -29,6 +29,15 @@ parser.addArgument(
 );
 
 parser.addArgument(
+  [ '--ts' ],
+  {
+    help: 'Override default creation time (unix timestamp)',
+    required: false,
+    type: 'int'
+  }
+);
+
+parser.addArgument(
   [ 'infile' ],
   {
     nargs: 1,
@@ -58,6 +67,10 @@ try {
 
 if (args.copyright) {
   options.copyright = args.copyright;
+}
+
+if (args.ts) {
+  options.ts = args.ts;
 }
 
 fs.writeFileSync(args.outfile[0], new Buffer(svg2ttf(svg, options).buffer));
