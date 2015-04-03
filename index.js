@@ -64,8 +64,8 @@ function svg2ttf(svgString, options) {
 
     glyph.name = svgGlyph.name;
     glyph.d = svgGlyph.d;
-    glyph.height = svgGlyph.height || font.height;
-    glyph.width = svgGlyph.width || font.width;
+    glyph.height = !isNaN(svgGlyph.height) ? svgGlyph.height : font.height;
+    glyph.width = !isNaN(svgGlyph.width) ? svgGlyph.width : font.width;
     glyphs.push(glyph);
 
     svgGlyph.sfntGlyph = glyph;
@@ -82,8 +82,8 @@ function svg2ttf(svgString, options) {
   if (svgFont.missingGlyph) {
     missingGlyph = new sfnt.Glyph();
     missingGlyph.d = svgFont.missingGlyph.d;
-    missingGlyph.height = svgFont.missingGlyph.height || font.height;
-    missingGlyph.width = svgFont.missingGlyph.width || font.width;
+    missingGlyph.height = !isNaN(svgFont.missingGlyph.height) ? svgFont.missingGlyph.height : font.height;
+    missingGlyph.width = !isNaN(svgFont.missingGlyph.width) ? svgFont.missingGlyph.width : font.width;
   } else {
     missingGlyph = _.find(glyphs, function(glyph) {
       return glyph.name === '.notdef';
