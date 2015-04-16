@@ -1,39 +1,27 @@
 {
-  "name"            : "svg2ttf",
-
-  "version"         : "1.2.0",
-
-  "description"     : "Convert SVG graphics to TTF font",
-  "keywords"        : ["font", "ttf", "svg", "convertor"],
-  "homepage"        : "https://github.com/fontello/svg2ttf",
-  "author"          : {
-                        "name"  : "Sergey Batishchev",
-                        "email" : "sergej.batishchev@gmail.com"
-                      },
-  "bugs"            : { "url": "https://github.com/fontello/svg2ttf/issues" },
-  "licenses"        : [
-                        {
-                          "type": "MIT",
-                          "url": "https://github.com/fontello/svg2ttf/raw/master/LICENSE"
-                        }
-                      ],
-
-  "dependencies"    : {
-                        "argparse":   "~ 0.1.15",
-                        "lodash":     "~ 2.1.0",
-                        "svgpath":    "~ 1.0.0",
-                        "xmldom":     "~ 0.1.16"
-                      },
-
-  "repository"      : {
-                        "type": "git",
-                        "url": "git://github.com/fontello/svg2ttf.git"
-                      },
-
-  "main"            : "./index.js",
-
-  "bin"             : {
-                        "svg2ttf": "./svg2ttf.js"
-                      }
+  "name": "svg2ttf",
+  "version": "1.2.0",
+  "description": "Converts SVG font to TTF font",
+  "keywords": [
+    "font",
+    "ttf",
+    "svg",
+    "convertor"
+  ],
+  "author": {
+    "name": "Sergey Batishchev",
+    "email": "sergej.batishchev@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "argparse": "^1.0.2",
+    "lodash": "^3.6.0",
+    "microbuffer": "^1.0.0",
+    "svgpath": "~1.0.0",
+    "xmldom": "~0.1.16"
+  },
+  "repository": "fontello/svg2ttf",
+  "bin": {
+    "svg2ttf": "./svg2ttf.js"
+  }
 }
-
