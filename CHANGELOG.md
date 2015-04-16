@@ -2,6 +2,7 @@
 ------------------
 
 - Added ligatures support, big thanks to @sabberworm.
+- Added arcs support in SVG paths.
 - Added `--ts` option to override default timestamp.
 
 

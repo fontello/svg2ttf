@@ -17,7 +17,7 @@
     "argparse": "^1.0.2",
     "lodash": "^3.6.0",
     "microbuffer": "^1.0.0",
-    "svgpath": "~1.0.0",
+    "svgpath": "~2.0.0",
     "xmldom": "~0.1.16"
   },
   "repository": "fontello/svg2ttf",

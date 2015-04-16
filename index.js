@@ -131,6 +131,7 @@ function svg2ttf(svgString, options) {
     var svgPath = new SvgPath(glyph.d)
       .abs()
       .unshort()
+      .unarc()
       .iterate(svg.cubicToQuad);
     var sfntContours = svg.toSfntCoutours(svgPath);
 

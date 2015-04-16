@@ -37,7 +37,9 @@ API
 ### svg2ttf(svgFontString, options) -> buf
 
 - `svgFontString` - SVG font content
-- `options` - not used yet
+- `options`
+  - `copyright` - copyright string (optional)
+  - `ts` - Unix timestamp (in seconds) to override creation time (optional)
 - `buf` - internal [byte buffer](https://github.com/fontello/microbuffer)
    object, similar to DataView. It's `buffer` property is  `Uin8Array` or `Array`
    with ttf content.
