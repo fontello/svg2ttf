@@ -27,6 +27,10 @@ function svg2ttf(svgString, options) {
   font.sfntNames.push({ id: 5, value: 'Version 1.0' }); // version ID for TTF name table
   font.sfntNames.push({ id: 6, value: options.fullname || svgFont.id }); // Postscript name for the font, required for OSX Font Book
 
+  if (typeof options.ts !== 'undefined') {
+    font.createdDate = font.modifiedDate = new Date(parseInt(options.ts, 10) * 1000);
+  }
+
   // Try to fill font metrics or guess defaults
   //
   font.unitsPerEm   = svgFont.unitsPerEm || 1000;

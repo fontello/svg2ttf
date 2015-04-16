@@ -29,6 +29,15 @@ parser.addArgument(
 );
 
 parser.addArgument(
+  [ '--ts' ],
+  {
+    help: 'Font creation time (Unix time stamp)',
+    required: false,
+    type: 'int'
+  }
+);
+
+parser.addArgument(
   [ 'infile' ],
   {
     nargs: 1,
@@ -58,6 +67,10 @@ try {
 
 if (args.copyright) {
   options.copyright = args.copyright;
+}
+
+if (args.ts !== null) {
+  options.ts = args.ts;
 }
 
 fs.writeFileSync(args.outfile[0], new Buffer(svg2ttf(svg, options).buffer));
