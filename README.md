@@ -37,7 +37,8 @@ API
 ### svg2ttf(svgFontString, options) -> buf
 
 - `svgFontString` - SVG font content
-- `options` - not used yet
+- `options` 
+  - `ts` - Pass a unix timestamp (integer) to override dynamically generated embedded timestamps. Use case: always pass the same value to ensure identical recompiles from an unchanged source file.
 - `buf` - internal [ByteBuffer](https://github.com/fontello/svg2ttf/blob/master/lib/byte_buffer.js)
    object, similar to DataView. It's `buffer` property is  `Uin8Array` or `Array` with ttf content
 
