@@ -38,8 +38,9 @@ API
 
 - `svgFontString` - SVG font content
 - `options` - not used yet
-- `buf` - internal [ByteBuffer](https://github.com/fontello/svg2ttf/blob/master/lib/byte_buffer.js)
-   object, similar to DataView. It's `buffer` property is  `Uin8Array` or `Array` with ttf content
+- `buf` - internal [byte buffer](https://github.com/fontello/microbuffer)
+   object, similar to DataView. It's `buffer` property is  `Uin8Array` or `Array`
+   with ttf content.
 
 Example:
 

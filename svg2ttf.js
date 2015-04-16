@@ -11,7 +11,7 @@
 var fs = require('fs');
 var ArgumentParser = require('argparse').ArgumentParser;
 
-var svg2ttf = require('./index.js');
+var svg2ttf = require('./');
 
 
 var parser = new ArgumentParser({
