@@ -31,7 +31,7 @@
   "globalstrict"  : true,   // Allow global "use strict" (also enables 'strict').
   "iterator"      : false,  // Allow usage of __iterator__ property.
   "lastsemic"     : false,  // Tolerate semicolon omited for the last statement.
-  "laxbreak"      : false,  // Tolerate unsafe line breaks e.g. `return [\n] x` without semicolons.
+  "laxbreak"      : true,  // Tolerate unsafe line breaks e.g. `return [\n] x` without semicolons.
   "laxcomma"      : true,   // This option suppresses warnings about comma-first coding style
   "loopfunc"      : false,  // Allow functions to be defined within loops.
   "multistr"      : false,  // Tolerate multi-line strings.

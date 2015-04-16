@@ -9,6 +9,7 @@
 
 var _       = require('lodash');
 var SvgPath = require('svgpath');
+var ucs2 = require('./lib/ucs2');
 var svg     = require('./lib/svg');
 var sfnt    = require('./lib/sfnt');
 
@@ -41,57 +42,79 @@ function svg2ttf(svgString, options) {
   font.ascent   = svgFont.ascent || (font.unitsPerEm - font.vertOriginY);
 
   var glyphs = font.glyphs;
+  var codePoints = font.codePoints;
+  var ligatures = font.ligatures;
+
+  function addCodePoint(codePoint, glyph) {
+    if(codePoints[codePoint]) {
+      // Ignore code points already defined
+      return false;
+    }
+    codePoints[codePoint] = glyph;
+    return true;
+  }
 
   // add SVG glyphs to SFNT font
   _.forEach(svgFont.glyphs, function (svgGlyph) {
     var glyph = new sfnt.Glyph();
 
-    glyph.unicode = svgGlyph.unicode;
     glyph.name = svgGlyph.name;
     glyph.d = svgGlyph.d;
     glyph.height = svgGlyph.height || font.height;
     glyph.width = svgGlyph.width || font.width;
     glyphs.push(glyph);
+
+    svgGlyph.sfntGlyph = glyph;
+
+    _.forEach(svgGlyph.unicode, function(codePoint) {
+      addCodePoint(codePoint, glyph);
+    });
   });
 
-  var notDefGlyph = _.find(glyphs, function(glyph) {
-    return glyph.name === '.notdef';
-  });
+  var missingGlyph;
 
   // add missing glyph to SFNT font
   // also, check missing glyph existance and single instance
-  var missingGlyph;
   if (svgFont.missingGlyph) {
     missingGlyph = new sfnt.Glyph();
-    missingGlyph.unicode = 0;
     missingGlyph.d = svgFont.missingGlyph.d;
     missingGlyph.height = svgFont.missingGlyph.height || font.height;
     missingGlyph.width = svgFont.missingGlyph.width || font.width;
-    glyphs.push(missingGlyph);
-
-    if (notDefGlyph) { //duplicate definition, we need to remove .notdef glyph
-      glyphs.splice(_.indexOf(glyphs, notDefGlyph), 1);
-    }
-  } else if (notDefGlyph) { // .notdef glyph is exists, we need to set its unicode to 0
-    notDefGlyph.unicode = 0;
+  } else {
+    missingGlyph = _.find(glyphs, function(glyph) {
+      return glyph.name === '.notdef';
+    });
   }
-  else { // no missing glyph and .notdef glyph, we need to create missing glyph
+  if(!missingGlyph) { // no missing glyph and .notdef glyph, we need to create missing glyph
     missingGlyph = new sfnt.Glyph();
-    missingGlyph.unicode = 0;
-    glyphs.push(missingGlyph);
   }
 
-  // sort glyphs by unicode
-  glyphs.sort(function (a, b) {
-    if ((a.unicode === undefined) !== (b.unicode === undefined)) {
-      return b.unicode === undefined ? -1 : 1;
-    } else {
-      return a.unicode < b.unicode ? -1 : 1;
-    }
+  // Create glyphs for all characters used in ligatures
+  _.forEach(svgFont.ligatures, function(svgLigature) {
+    var ligature = {
+        ligature: svgLigature.ligature,
+        unicode: svgLigature.unicode,
+        glyph: svgLigature.glyph.sfntGlyph
+    };
+    _.forEach(ligature.unicode, function(charPoint) {
+      // We need to have a distinct glyph for each code point so we can reference it in GSUB
+      var glyph = new sfnt.Glyph();
+      var added = addCodePoint(charPoint, glyph);
+      if(added) {
+        glyph.name = ucs2.encode([charPoint]);
+        glyphs.push(glyph);
+      }
+    });
+    ligatures.push(ligature);
   });
 
-  var nextID = 0;
+  // Missing Glyph needs to have index 0
+  if(glyphs.indexOf(missingGlyph) !== -1) {
+    glyphs.splice(glyphs.indexOf(missingGlyph), 1);
+  }
+  glyphs.unshift(missingGlyph);
 
+  var nextID = 0;
   //add IDs
   _.forEach(glyphs, function(glyph) {
     glyph.id = nextID;
