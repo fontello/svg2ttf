@@ -31,7 +31,7 @@ parser.addArgument(
 parser.addArgument(
   [ '--ts' ],
   {
-    help: 'Font creation time (Unix time stamp)',
+    help: 'Override font creation time (Unix time stamp)',
     required: false,
     type: 'int'
   }

@@ -1,3 +1,10 @@
+2.0.0 / WIP
+------------------
+
+- Added ligatures support, big thanks to @sabberworm.
+- Added `--ts` option to override default timestamp.
+
+
 1.2.0 / 2014-10-05
 ------------------
 
