@@ -1,10 +1,12 @@
-2.0.0 / WIP
+2.0.0 / 2015-04-25
 ------------------
 
 - Added ligatures support, big thanks to @sabberworm.
 - Added arcs support in SVG paths.
 - Added `--ts` option to override default timestamp.
-- Fixed horisontal offset (`lsb`) when glyph exceed width
+- Fixed horisontal offset (`lsb`) when glyph exceed width.
+- Allow zero-width glyphs.
+- Better error message on attempt to convert SVG image instead of SVG font.
 
 
 1.2.0 / 2014-10-05
