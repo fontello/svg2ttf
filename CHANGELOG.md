@@ -1,3 +1,9 @@
+2.0.1 / 2015-07-17
+------------------
+
+- Fix: TTF creation timestamp should not depende on timezone, thanks to @nfroidure.
+
+
 2.0.0 / 2015-04-25
 ------------------
 
