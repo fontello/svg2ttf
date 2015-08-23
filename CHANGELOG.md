@@ -1,3 +1,9 @@
+2.0.2 / 2015-08-23
+------------------
+
+- Fixed parse empty SVG glyphs without `d` attribute.
+
+
 2.0.1 / 2015-07-17
 ------------------
 
