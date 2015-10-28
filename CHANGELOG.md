@@ -1,5 +1,5 @@
-WIP
----
+2.1.0 / 2015-10-28
+------------------
 
 - Fixed smoothness at the ends of interpolated cubic beziers.
 
