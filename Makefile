@@ -35,7 +35,6 @@ dev-deps:
 		exit 128 ; \
 		fi
 	npm install -g jshint
-	npm install
 
 
 publish:
