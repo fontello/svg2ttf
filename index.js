@@ -127,12 +127,20 @@ function svg2ttf(svgString, options) {
 
   _.forEach(glyphs, function (glyph) {
 
+    // Calculate accuracy for cubicToQuad transformation
+    // For glyphs with height and width smaller than 500 use relative 0.06% accuracy,
+    // for larger glyphs use fixed accuracy 0.3.
+    var glyphSize = Math.max(glyph.width, glyph.height);
+    var accuracy = (glyphSize > 500) ? 0.3 : glyphSize * 0.0006;
+
     //SVG transformations
     var svgPath = new SvgPath(glyph.d)
       .abs()
       .unshort()
       .unarc()
-      .iterate(svg.cubicToQuad);
+      .iterate(function(segment, index, x, y) { 
+        return svg.cubicToQuad(segment, index, x, y, accuracy);
+      });
     var sfntContours = svg.toSfntCoutours(svgPath);
 
     // Add contours to SFNT font
