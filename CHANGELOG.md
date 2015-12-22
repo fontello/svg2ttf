@@ -1,3 +1,9 @@
+2.1.1 / 2015-12-22
+------------------
+
+- Maintenance release: deps bump (svgpath with bugfixes).
+
+
 2.1.0 / 2015-10-28
 ------------------
 
