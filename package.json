@@ -14,11 +14,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "argparse": "^1.0.2",
+    "argparse": "^1.0.3",
     "cubic2quad": "^1.0.0",
     "lodash": "^3.6.0",
     "microbuffer": "^1.0.0",
-    "svgpath": "~2.0.0",
+    "svgpath": "^2.1.2",
     "xmldom": "~0.1.16"
   },
   "repository": "fontello/svg2ttf",
