@@ -1,3 +1,10 @@
+3.0.0 / 2016-02-12
+------------------
+
+- Changed defaults to workaround IE bugs.
+- Set HHEA lineGap -> 0.
+
+
 2.1.1 / 2015-12-22
 ------------------
 
