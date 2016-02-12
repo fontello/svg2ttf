@@ -2,7 +2,8 @@
 ------------------
 
 - Changed defaults to workaround IE bugs.
-- Set HHEA lineGap -> 0.
+- Set HHEA lineGap to 0, #37.
+- Set OS/2 fsType to 0, #45.
 
 
 2.1.1 / 2015-12-22
