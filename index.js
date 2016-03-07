@@ -50,7 +50,7 @@ function svg2ttf(svgString, options) {
   var ligatures = font.ligatures;
 
   function addCodePoint(codePoint, glyph) {
-    if(codePoints[codePoint]) {
+    if (codePoints[codePoint]) {
       // Ignore code points already defined
       return false;
     }
@@ -70,7 +70,7 @@ function svg2ttf(svgString, options) {
 
     svgGlyph.sfntGlyph = glyph;
 
-    _.forEach(svgGlyph.unicode, function(codePoint) {
+    _.forEach(svgGlyph.unicode, function (codePoint) {
       addCodePoint(codePoint, glyph);
     });
   });
@@ -85,27 +85,29 @@ function svg2ttf(svgString, options) {
     missingGlyph.height = !isNaN(svgFont.missingGlyph.height) ? svgFont.missingGlyph.height : font.height;
     missingGlyph.width = !isNaN(svgFont.missingGlyph.width) ? svgFont.missingGlyph.width : font.width;
   } else {
-    missingGlyph = _.find(glyphs, function(glyph) {
+    missingGlyph = _.find(glyphs, function (glyph) {
       return glyph.name === '.notdef';
     });
   }
-  if(!missingGlyph) { // no missing glyph and .notdef glyph, we need to create missing glyph
+  if (!missingGlyph) { // no missing glyph and .notdef glyph, we need to create missing glyph
     missingGlyph = new sfnt.Glyph();
   }
 
   // Create glyphs for all characters used in ligatures
-  _.forEach(svgFont.ligatures, function(svgLigature) {
+  _.forEach(svgFont.ligatures, function (svgLigature) {
     var ligature = {
-        ligature: svgLigature.ligature,
-        unicode: svgLigature.unicode,
-        glyph: svgLigature.glyph.sfntGlyph
+      ligature: svgLigature.ligature,
+      unicode: svgLigature.unicode,
+      glyph: svgLigature.glyph.sfntGlyph
     };
-    _.forEach(ligature.unicode, function(charPoint) {
+
+    _.forEach(ligature.unicode, function (charPoint) {
       // We need to have a distinct glyph for each code point so we can reference it in GSUB
       var glyph = new sfnt.Glyph();
       var added = addCodePoint(charPoint, glyph);
-      if(added) {
-        glyph.name = ucs2.encode([charPoint]);
+
+      if (added) {
+        glyph.name = ucs2.encode([ charPoint ]);
         glyphs.push(glyph);
       }
     });
@@ -113,14 +115,15 @@ function svg2ttf(svgString, options) {
   });
 
   // Missing Glyph needs to have index 0
-  if(glyphs.indexOf(missingGlyph) !== -1) {
+  if (glyphs.indexOf(missingGlyph) !== -1) {
     glyphs.splice(glyphs.indexOf(missingGlyph), 1);
   }
   glyphs.unshift(missingGlyph);
 
   var nextID = 0;
+
   //add IDs
-  _.forEach(glyphs, function(glyph) {
+  _.forEach(glyphs, function (glyph) {
     glyph.id = nextID;
     nextID++;
   });
@@ -138,7 +141,7 @@ function svg2ttf(svgString, options) {
       .abs()
       .unshort()
       .unarc()
-      .iterate(function(segment, index, x, y) { 
+      .iterate(function (segment, index, x, y) {
         return svg.cubicToQuad(segment, index, x, y, accuracy);
       });
     var sfntContours = svg.toSfntCoutours(svgPath);
@@ -149,6 +152,7 @@ function svg2ttf(svgString, options) {
 
       contour.points = _.map(sfntContour, function (sfntPoint) {
         var point = new sfnt.Point();
+
         point.x = sfntPoint.x;
         point.y = sfntPoint.y;
         point.onCurve = sfntPoint.onCurve;
@@ -160,6 +164,7 @@ function svg2ttf(svgString, options) {
   });
 
   var ttf = sfnt.toTTF(font);
+
   return ttf;
 }
 

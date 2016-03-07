@@ -4,6 +4,8 @@
  * Internal utility qu quickly check ttf tables size
  */
 
+/*eslint-disable no-console*/
+
 'use strict';
 
 
@@ -28,7 +30,7 @@ parser.addArgument(
 );
 
 parser.addArgument(
-  ['-d', '--details'],
+  [ '-d', '--details' ],
   {
     help: 'Show table dump',
     action: 'storeTrue',
@@ -41,7 +43,7 @@ var ttf;
 
 try {
   ttf = fs.readFileSync(args.infile[0]);
-} catch(e) {
+} catch (e) {
   console.error("Can't open input file (%s)", args.infile[0]);
   process.exit(1);
 }
@@ -50,8 +52,8 @@ var tablesCount = ttf.readUInt16BE(4);
 
 var i, offset, headers = [];
 
-for (i=0; i<tablesCount; i++) {
-  offset = 12 + i*16;
+for (i = 0; i < tablesCount; i++) {
+  offset = 12 + i * 16;
   headers.push({
     name: String.fromCharCode(
       ttf.readUInt8(offset),
@@ -67,7 +69,7 @@ for (i=0; i<tablesCount; i++) {
 console.log(format('Tables count: %d'), tablesCount);
 
 _.forEach(_.sortBy(headers, 'offset'), function (info) {
-  console.log("- %s: %d bytes (%d offset)", info.name, info.length, info.offset);
+  console.log('- %s: %d bytes (%d offset)', info.name, info.length, info.offset);
   if (args.details) {
     var bufTable = ttf.slice(info.offset, info.offset + info.length);
     var count = Math.floor(bufTable.length / 32);
@@ -84,6 +86,6 @@ _.forEach(_.sortBy(headers, 'offset'), function (info) {
       console.log(bufTable.slice(offset, info.length));
     }
 
-    console.log("");
+    console.log('');
   }
 });
