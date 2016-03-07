@@ -27,6 +27,7 @@ lint:
 	jshint . --show-non-errors
 
 test: lint
+	./node_modules/.bin/mocha
 
 dev-deps:
 	@if test ! `which npm` ; then \

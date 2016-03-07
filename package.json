@@ -24,5 +24,8 @@
   "repository": "fontello/svg2ttf",
   "bin": {
     "svg2ttf": "./svg2ttf.js"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5"
   }
 }
