@@ -26,6 +26,7 @@
     "svg2ttf": "./svg2ttf.js"
   },
   "devDependencies": {
+    "eslint": "^2.3.0",
     "mocha": "^2.4.5"
   }
 }
