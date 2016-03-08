@@ -8,11 +8,21 @@
     "svg",
     "convertor"
   ],
-  "author": {
-    "name": "Sergey Batishchev",
-    "email": "sergej.batishchev@gmail.com"
-  },
+  "author": "Sergey Batishchev <sergej.batishchev@gmail.com>",
   "license": "MIT",
+  "repository": "fontello/svg2ttf",
+  "bin": {
+    "svg2ttf": "./svg2ttf.js"
+  },
+  "files": [
+    "index.js",
+    "svg2ttf.js",
+    "lib/"
+  ],
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint .",
+    "test": "npm run lint && ./node_modules/.bin/mocha"
+  },
   "dependencies": {
     "argparse": "^1.0.6",
     "cubic2quad": "^1.0.0",
@@ -20,10 +30,6 @@
     "microbuffer": "^1.0.0",
     "svgpath": "^2.1.5",
     "xmldom": "~0.1.22"
-  },
-  "repository": "fontello/svg2ttf",
-  "bin": {
-    "svg2ttf": "./svg2ttf.js"
   },
   "devDependencies": {
     "eslint": "^2.3.0",
