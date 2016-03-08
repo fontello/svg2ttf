@@ -1,3 +1,11 @@
+4.0.0 / 2016-03-08
+------------------
+
+- Deps update (lodash -> 4.+).
+- Set HHEA lineGap to 0, #37 (second attempt :).
+- Cleanup, testing.
+
+
 3.0.0 / 2016-02-12
 ------------------
 
