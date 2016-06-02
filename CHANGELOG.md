@@ -1,3 +1,9 @@
+4.0.1 / 2016-06-03
+------------------
+
+- Fix IE ligatures by explicitly adding the latin script to the script list, #47.
+
+
 4.0.0 / 2016-03-08
 ------------------
 
