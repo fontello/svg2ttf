@@ -40,6 +40,46 @@ parser.addArgument(
 );
 
 parser.addArgument(
+  [ '--v', '--font-version' ],
+  {
+    help: 'Version',
+    required: false,
+    dest: 'version'
+  }
+);
+
+parser.addArgument(
+  [ '--vma', '--version-major' ],
+  {
+    help: 'Major Version',
+    required: false,
+    defaultValue: 1,
+    type: 'int',
+    dest: 'versionMajor'
+  }
+);
+
+parser.addArgument(
+  [ '--vmi', '--version-minor' ],
+  {
+    help: 'Minor Version',
+    required: false,
+    defaultValue: 0,
+    type: 'int',
+    dest: 'versionMinor'
+  }
+);
+
+parser.addArgument(
+  [ '--vs', '--version-suffix' ],
+  {
+    help: 'Other Version Info',
+    required: false,
+    dest: 'versionSuffix'
+  }
+);
+
+parser.addArgument(
   [ 'infile' ],
   {
     nargs: 1,
@@ -70,6 +110,22 @@ try {
 if (args.copyright) {
   options.copyright = args.copyright;
 }
+if (args.version) {
+  options.version = args.version;
+} else if (args.versionMajor) {
+  options.version = {
+    major: args.versionMajor,
+    minor: 0,
+    suffix: null
+  };
+  if (args.versionMinor) {
+    options.version.minor = args.versionMinor;
+  }
+  if (args.versionSuffix) {
+    options.version.suffix = args.versionSuffix;
+  }
+}
+
 
 if (args.ts !== null) {
   options.ts = args.ts;

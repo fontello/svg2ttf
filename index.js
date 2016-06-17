@@ -18,13 +18,39 @@ function svg2ttf(svgString, options) {
   var svgFont = svg.load(svgString);
 
   options = options || {};
+  options.version = options.version || {
+    major: 1,
+    minor: 0,
+    suffix: null
+  };
+
+  function generateTTFVersionString(options) {
+    if (_.isString(options.version)) {
+      var versionRegEx = /(?:Version)\s+(\d)\.(\d)[;\.\-]?(.*)/gi;
+      var versionMatch;
+
+      if (((versionMatch = versionRegEx.exec(options.version)) !== null)) {
+        options.version = {
+          major: versionMatch[1],
+          minor: versionMatch[2],
+          suffix: versionMatch[3]
+        };
+      } else {
+        throw 'Invalid version string ' + options.version;
+      }
+
+    }
+    return 'Version ' +
+      (options.version.major || 1) + '.' + (options.version.minor || 0) +
+      (options.version.suffix ? '; ' + options.version.suffix : '');
+  }
 
   font.id = options.id || svgFont.id;
   font.familyName = options.familyname || svgFont.familyName || svgFont.id;
   font.copyright = options.copyright || svgFont.metadata;
   font.sfntNames.push({ id: 2, value: options.subfamilyname || 'Regular' }); // subfamily name
   font.sfntNames.push({ id: 4, value: options.fullname || svgFont.id }); // full name
-  font.sfntNames.push({ id: 5, value: 'Version 1.0' }); // version ID for TTF name table
+  font.sfntNames.push({ id: 5, value: generateTTFVersionString(options) }); // version ID for TTF name table
   font.sfntNames.push({ id: 6, value: options.fullname || svgFont.id }); // Postscript name for the font, required for OSX Font Book
 
   if (typeof options.ts !== 'undefined') {
