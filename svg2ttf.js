@@ -40,6 +40,15 @@ parser.addArgument(
 );
 
 parser.addArgument(
+  [ '--vs' ],
+  {
+    help: 'Override default font version string (Version 1.0), can be "x.y" or "Version x.y"',
+    required: false,
+    type: 'string'
+  }
+);
+
+parser.addArgument(
   [ 'infile' ],
   {
     nargs: 1,
@@ -67,12 +76,10 @@ try {
   process.exit(1);
 }
 
-if (args.copyright) {
-  options.copyright = args.copyright;
-}
+if (args.copyright) options.copyright = args.copyright;
 
-if (args.ts !== null) {
-  options.ts = args.ts;
-}
+if (args.ts !== null) options.ts = args.ts;
+
+if (args.vs) options.version = args.vs;
 
 fs.writeFileSync(args.outfile[0], new Buffer(svg2ttf(svg, options).buffer));

@@ -40,6 +40,7 @@ API
 - `options`
   - `copyright` - copyright string (optional)
   - `ts` - Unix timestamp (in seconds) to override creation time (optional)
+  - `version` - font version string, can be `Version x.y` or `x.y`.
 - `buf` - internal [byte buffer](https://github.com/fontello/microbuffer)
    object, similar to DataView. It's `buffer` property is  `Uin8Array` or `Array`
    with ttf content.

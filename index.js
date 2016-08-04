@@ -13,6 +13,10 @@ var ucs2 = require('./lib/ucs2');
 var svg     = require('./lib/svg');
 var sfnt    = require('./lib/sfnt');
 
+
+var VERSION_RE = /^(Version )?(\d+[.]\d+)$/i;
+
+
 function svg2ttf(svgString, options) {
   var font = new sfnt.Font();
   var svgFont = svg.load(svgString);
@@ -24,7 +28,21 @@ function svg2ttf(svgString, options) {
   font.copyright = options.copyright || svgFont.metadata;
   font.sfntNames.push({ id: 2, value: options.subfamilyname || 'Regular' }); // subfamily name
   font.sfntNames.push({ id: 4, value: options.fullname || svgFont.id }); // full name
-  font.sfntNames.push({ id: 5, value: 'Version 1.0' }); // version ID for TTF name table
+
+
+  var versionString = options.version || 'Version 1.0';
+
+  if (typeof versionString !== 'string') {
+    throw new Error('svg2ttf: version option should be a string');
+  }
+  if (!VERSION_RE.test(versionString)) {
+    throw new Error('svg2ttf: invalid option, version - "' + options.version + '"');
+  }
+
+  versionString = 'Version ' + versionString.match(VERSION_RE)[2];
+  font.sfntNames.push({ id: 5, value: versionString }); // version ID for TTF name table
+
+
   font.sfntNames.push({ id: 6, value: options.fullname || svgFont.id }); // Postscript name for the font, required for OSX Font Book
 
   if (typeof options.ts !== 'undefined') {
