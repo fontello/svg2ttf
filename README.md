@@ -1,6 +1,7 @@
 svg2ttf
 ========
 
+[![Build Status](https://img.shields.io/travis/fontello/svg2ttf/master.svg?style=flat)](https://travis-ci.org/fontello/svg2ttf)
 [![NPM version](https://img.shields.io/npm/v/svg2ttf.svg?style=flat)](https://www.npmjs.org/package/svg2ttf)
 
 > Converts SVG fonts to TTF format. It was initially written for
