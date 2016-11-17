@@ -9,7 +9,7 @@ svg2ttf
 __For developpers:__
 
 Internal API is similar to FontForge's one. Since primary goal
-is generating iconic fonts, sources can lack some spesific TTF/OTF features,
+is generating iconic fonts, sources can lack some specific TTF/OTF features,
 like kerning and so on. Anyway, current code is a good base for development,
 because it will save you tons of hours to implement correct writing & optimizing
 TTF tables.
