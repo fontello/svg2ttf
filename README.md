@@ -1,6 +1,8 @@
 svg2ttf
 ========
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/fontello/svg2ttf.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://img.shields.io/travis/fontello/svg2ttf/master.svg?style=flat)](https://travis-ci.org/fontello/svg2ttf)
 [![NPM version](https://img.shields.io/npm/v/svg2ttf.svg?style=flat)](https://www.npmjs.org/package/svg2ttf)
 
