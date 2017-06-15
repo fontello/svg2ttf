@@ -26,9 +26,8 @@ function svg2ttf(svgString, options) {
   font.id = options.id || svgFont.id;
   font.familyName = options.familyname || svgFont.familyName || svgFont.id;
   font.copyright = options.copyright || svgFont.metadata;
-  font.sfntNames.push({ id: 2, value: options.subfamilyname || 'Regular' }); // subfamily name
+  font.sfntNames.push({ id: 2, value: options.subfamilyname || svgFont.subfamilyName || 'Regular' }); // subfamily name
   font.sfntNames.push({ id: 4, value: options.fullname || svgFont.id }); // full name
-
 
   var versionString = options.version || 'Version 1.0';
 
@@ -41,9 +40,7 @@ function svg2ttf(svgString, options) {
 
   versionString = 'Version ' + versionString.match(VERSION_RE)[2];
   font.sfntNames.push({ id: 5, value: versionString }); // version ID for TTF name table
-
-
-  font.sfntNames.push({ id: 6, value: options.fullname || svgFont.id }); // Postscript name for the font, required for OSX Font Book
+  font.sfntNames.push({ id: 6, value: (options.fullname || svgFont.id).replace(/[\s\(\)\[\]<>%\/]/g, '').substr(0, 62) }); // Postscript name for the font, required for OSX Font Book
 
   if (typeof options.ts !== 'undefined') {
     font.createdDate = font.modifiedDate = new Date(parseInt(options.ts, 10) * 1000);
