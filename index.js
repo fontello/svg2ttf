@@ -23,7 +23,8 @@ function svg2ttf(svgString, options) {
 
   options = options || {};
 
-  font.id = options.id || svgFont.id;
+  font.id = svgFont.familyName || options.id || svgFont.id;
+	svgFont.id = font.id;
   font.familyName = options.familyname || svgFont.familyName || svgFont.id;
   font.copyright = options.copyright || svgFont.metadata;
   font.sfntNames.push({ id: 2, value: options.subfamilyname || svgFont.subfamilyName || 'Regular' }); // subfamily name
