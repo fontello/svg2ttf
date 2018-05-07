@@ -26,6 +26,7 @@ function svg2ttf(svgString, options) {
   font.id = options.id || svgFont.id;
   font.familyName = options.familyname || svgFont.familyName || svgFont.id;
   font.copyright = options.copyright || svgFont.metadata;
+  font.fsType = options.fsType || font.fsType;
   font.sfntNames.push({ id: 2, value: options.subfamilyname || svgFont.subfamilyName || 'Regular' }); // subfamily name
   font.sfntNames.push({ id: 4, value: options.fullname || svgFont.id }); // full name
 
