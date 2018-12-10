@@ -31,11 +31,29 @@ parser.addArgument(
 );
 
 parser.addArgument(
+  [ '-d', '--description' ],
+  {
+    help: 'Override default description text',
+    required: false,
+    type: 'string'
+  }
+);
+
+parser.addArgument(
   [ '--ts' ],
   {
     help: 'Override font creation time (Unix time stamp)',
     required: false,
     type: 'int'
+  }
+);
+
+parser.addArgument(
+  [ '-u', '--url' ],
+  {
+    help: 'Override default manufacturer url',
+    required: false,
+    type: 'string'
   }
 );
 
@@ -78,7 +96,11 @@ try {
 
 if (args.copyright) options.copyright = args.copyright;
 
+if (args.description) options.description = args.description;
+
 if (args.ts !== null) options.ts = args.ts;
+
+if (args.url) options.url = args.url;
 
 if (args.vs) options.version = args.vs;
 
