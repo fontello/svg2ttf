@@ -62,6 +62,13 @@ function svg2ttf(svgString, options) {
   font.descent  = !isNaN(svgFont.descent) ? svgFont.descent : -font.vertOriginY;
   font.ascent   = svgFont.ascent || (font.unitsPerEm - font.vertOriginY);
 
+  if (typeof svgFont.underlinePosition !== 'undefined') {
+    font.underlinePosition = svgFont.underlinePosition;
+  }
+  if (typeof svgFont.underlineThickness !== 'undefined') {
+    font.underlineThickness = svgFont.underlineThickness;
+  }
+
   var glyphs = font.glyphs;
   var codePoints = font.codePoints;
   var ligatures = font.ligatures;
