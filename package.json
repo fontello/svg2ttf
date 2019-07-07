@@ -22,7 +22,9 @@
   "scripts": {
     "lint": "eslint .",
     "test": "npm run lint && mocha",
-    "update_fixture": "./svg2ttf.js --ts 1457357570703 test/fixtures/test.svg test/fixtures/test.ttf"
+    "update_fixture": "./svg2ttf.js --ts 1457357570703 test/fixtures/test.svg test/fixtures/test.ttf",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "argparse": "^1.0.6",
@@ -30,10 +32,12 @@
     "lodash": "^4.17.10",
     "microbuffer": "^1.0.0",
     "svgpath": "^2.1.5",
-    "xmldom": "~0.1.22"
+    "xmldom": "~0.1.22",
+    "snyk": "^1.192.3"
   },
   "devDependencies": {
     "eslint": "^5.10.0",
     "mocha": "^6.0.0"
-  }
+  },
+  "snyk": true
 }
