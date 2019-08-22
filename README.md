@@ -57,16 +57,3 @@ var svg2ttf = require('svg2ttf');
 var ttf = svg2ttf(fs.readFileSync('myfont.svg', 'utf8'), {});
 fs.writeFileSync('myfont.ttf', new Buffer(ttf.buffer));
 ```
-
-
-Authors
--------
-
-* Sergey Batishchev - [@snb2013](https://github.com/snb2013)
-* Vitaly Puzrin - [@puzrin](https://github.com/puzrin)
-
-
-License
--------
-
-[MIT](https://github.com/nodeca/svg2ttf/blob/master/LICENSE).
