@@ -1,5 +1,5 @@
 svg2ttf
-========
+=======
 
 [![Build Status](https://img.shields.io/travis/fontello/svg2ttf/master.svg?style=flat)](https://travis-ci.org/fontello/svg2ttf)
 [![NPM version](https://img.shields.io/npm/v/svg2ttf.svg?style=flat)](https://www.npmjs.org/package/svg2ttf)
@@ -57,3 +57,9 @@ var svg2ttf = require('svg2ttf');
 var ttf = svg2ttf(fs.readFileSync('myfont.svg', 'utf8'), {});
 fs.writeFileSync('myfont.ttf', new Buffer(ttf.buffer));
 ```
+
+
+Support svg2ttf
+---------------
+
+You can support this project via [Tidelift subscription](https://tidelift.com/subscription/pkg/npm-svg2ttf?utm_source=npm-svg2ttf&utm_medium=referral&utm_campaign=readme).
