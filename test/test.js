@@ -45,4 +45,30 @@ describe('svg2ttf', function () {
       assert.notDeepEqual(new Uint8Array(svg2ttf(src, options).buffer), dst);
     });
   });
+
+  // TODO: update test case
+  // describe('designerurl', function () {
+
+  //   it('should throw on bad designerurl value', function () {
+  //     assert.throws(function () {
+  //       svg2ttf(src, { designerurl: 'fontello.com' });
+  //     });
+  //     assert.throws(function () {
+  //       svg2ttf(src, { designerurl: 'fontello.com' });
+  //     });
+  //     assert.throws(function () {
+  //       svg2ttf(src, { designerurl: 123 });
+  //     });
+  //     assert.throws(function () {
+  //       svg2ttf(src, { designerurl: 'abc' });
+  //     });
+  //   });
+
+  //   it('should set proper designerurl', function () {
+  //     var options;
+
+  //     options = { ts: 1457357570703, designerurl: 'http://fontello.com' };
+  //     assert.deepEqual(new Uint8Array(svg2ttf(src, options).buffer), dst2);
+  //   });
+  // });
 });
