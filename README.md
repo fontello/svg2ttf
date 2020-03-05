@@ -59,7 +59,8 @@ fs.writeFileSync('myfont.ttf', new Buffer(ttf.buffer));
 ```
 
 
-Support svg2ttf
----------------
+## svg2ttf for enterprise
 
-You can support this project via [Tidelift subscription](https://tidelift.com/subscription/pkg/npm-svg2ttf?utm_source=npm-svg2ttf&utm_medium=referral&utm_campaign=readme).
+Available as part of the Tidelift Subscription.
+
+The maintainers of `svg2ttf` and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/npm-svg2ttf?utm_source=npm-svg2ttf&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
