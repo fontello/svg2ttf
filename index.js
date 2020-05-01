@@ -48,6 +48,10 @@ function svg2ttf(svgString, options) {
     font.createdDate = font.modifiedDate = new Date(parseInt(options.ts, 10) * 1000);
   }
 
+  if (options.useTypoMetrics) {
+    font.fsSelection = 0xC0;
+  }
+
   // Try to fill font metrics or guess defaults
   //
   font.unitsPerEm   = svgFont.unitsPerEm || 1000;
