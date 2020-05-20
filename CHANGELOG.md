@@ -1,3 +1,11 @@
+5.0.0 / 2020-05-20
+------------------
+
+- Breaking: `USE_TYPO_METRICS` bit of `OS/2.fsSelection` is now set. Should fix
+  Windows line spacing issues, #95.
+- Use font weight value when defined.
+
+
 4.3.0 / 2019-05-24
 ------------------
 
