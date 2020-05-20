@@ -55,12 +55,22 @@ function svg2ttf(svgString, options) {
   font.horizOriginY = svgFont.horizOriginY || 0;
   font.vertOriginX  = svgFont.vertOriginX || 0;
   font.vertOriginY  = svgFont.vertOriginY || 0;
-  // need to correctly convert text values, use default (400) until compleete
-  //font.weightClass = svgFont.weightClass;
   font.width    = svgFont.width || svgFont.unitsPerEm;
   font.height   = svgFont.height || svgFont.unitsPerEm;
   font.descent  = !isNaN(svgFont.descent) ? svgFont.descent : -font.vertOriginY;
   font.ascent   = svgFont.ascent || (font.unitsPerEm - font.vertOriginY);
+
+  if (typeof svgFont.weightClass !== 'undefined') {
+    var wght = parseInt(svgFont.weightClass, 10);
+
+    if (!isNaN(wght)) font.weightClass = wght;
+    else {
+      // Unknown names are silently ignored
+      if (svgFont.weightClass === 'normal') font.weightClass = 400;
+      if (svgFont.weightClass === 'bold') font.weightClass = 700;
+    }
+  }
+
 
   if (typeof svgFont.underlinePosition !== 'undefined') {
     font.underlinePosition = svgFont.underlinePosition;
