@@ -33,7 +33,7 @@
     "xmldom": "~0.1.22"
   },
   "devDependencies": {
-    "eslint": "^5.10.0",
-    "mocha": "^6.0.0"
+    "eslint": "^7.0.0",
+    "mocha": "^7.1.2"
   }
 }
