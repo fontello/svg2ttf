@@ -1,3 +1,10 @@
+5.1.0 / 2020-10-29
+------------------
+
+- Added support of `d` attr in nested `<path>` tag (for UNSCII font source). 
+
+
+
 5.0.0 / 2020-05-20
 ------------------
 
