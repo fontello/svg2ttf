@@ -38,6 +38,9 @@ describe('svg2ttf', function () {
     it('[version]should set proper version', function () {
       var options;
 
+      // Default version
+      assert.equal('Version 1.0', parseFont(src, options).tables.name.version.en);
+
       options = { ts: 1457357570703, version: '1.0'};
       assert.equal('Version 1.0', parseFont(src, options).tables.name.version.en);
 
@@ -49,6 +52,25 @@ describe('svg2ttf', function () {
 
       options = { ts: 1457357570703, version: 'version 2.0' };
       assert.equal('Version 2.0', parseFont(src, options).tables.name.version.en);
+    });
+
+    it('[copyright]should remove the whitespace before and after copyright', function () {
+      var options;
+
+      // Default copyright
+      assert.equal('Copyright (C) 2016 by original authors @ fontello.com', parseFont(src, options).tables.name.copyright.en);
+
+      options = { ts: 1457357570703, copyright: 'foo bar  '};
+      assert.equal('foo bar', parseFont(src, options).tables.name.copyright.en);
+
+      options = { ts: 1457357570703, copyright: '   foo bar   '};
+      assert.equal('foo bar', parseFont(src, options).tables.name.copyright.en);
+
+      options = { ts: 1457357570703, copyright: '\tFoo bar\n'};
+      assert.equal('Foo bar', parseFont(src, options).tables.name.copyright.en);
+
+      options = { ts: 1457357570703, copyright: '  Copyright (C) 2016 by original authors @ fontello.com\n'};
+      assert.equal('Copyright (C) 2016 by original authors @ fontello.com', parseFont(src, options).tables.name.copyright.en);
     });
   });
 });
