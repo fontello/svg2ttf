@@ -183,11 +183,23 @@ describe('svg2ttf', function () {
 
 
   // https://docs.microsoft.com/en-us/typography/opentype/spec/os2#achvendid
-  describe('OS/2 achVendID', function () {
+  describe('lineGap and achVendID', function () {
     it('achVendID', function () {
       // TODO：Should be changed to NONE
       // https://github.com/googlefonts/fontbakery/blob/6d184b324beda409f4d670ab957d1c079d0bd814/Lib/fontbakery/profiles/googlefonts.py#L869-L878
       assert.equal('PfEd', parseFont(src).tables.os2.achVendID);
+    });
+
+    it('os2.sTypoLineGap', function () {
+      assert.equal(parseFont(src).tables.os2.sTypoLineGap, 90);
+    });
+
+    it('hhea.lineGap', function () {
+      assert.equal(parseFont(src).tables.hhea.lineGap, 0);
+    });
+
+    it('sTypoLineGap == lineGap', function () {
+      assert.equal(parseFont(src).tables.hhea.lineGap, parseFont(src).tables.os2.sTypoLineGap);
     });
   });
 
