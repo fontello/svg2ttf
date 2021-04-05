@@ -16,29 +16,22 @@ var format  = require('util').format;
 var ArgumentParser = require('argparse').ArgumentParser;
 
 var parser = new ArgumentParser({
-  version: require('./package.json').version,
-  addHelp: true,
-  description: 'Dupm TTF tables info'
+  add_help: true,
+  description: 'Dump TTF tables info'
 });
 
-parser.addArgument(
-  [ 'infile' ],
-  {
-    nargs: 1,
-    help: 'Input file'
-  }
-);
+parser.add_argument('infile', {
+  nargs: 1,
+  help: 'Input file'
+});
 
-parser.addArgument(
-  [ '-d', '--details' ],
-  {
-    help: 'Show table dump',
-    action: 'storeTrue',
-    required: false
-  }
-);
+parser.add_argument('-d', '--details', {
+  help: 'Show table dump',
+  action: 'store_true',
+  required: false
+});
 
-var args = parser.parseArgs();
+var args = parser.parse_args();
 var ttf;
 
 try {

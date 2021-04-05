@@ -17,73 +17,56 @@ var svg2ttf = require('./');
 
 
 var parser = new ArgumentParser({
-  version: require('./package.json').version,
-  addHelp: true,
+  add_help: true,
   description: 'SVG to TTF font converter'
 });
 
-parser.addArgument(
-  [ '-c', '--copyright' ],
-  {
-    help: 'Copyright text',
-    required: false
-  }
-);
+parser.add_argument('-v', '--version', {
+  action: 'version',
+  version: require('./package.json').version
+});
 
-parser.addArgument(
-  [ '-d', '--description' ],
-  {
-    help: 'Override default description text',
-    required: false,
-    type: 'string'
-  }
-);
+parser.add_argument('-c', '--copyright', {
+  help: 'Copyright text',
+  required: false
+});
 
-parser.addArgument(
-  [ '--ts' ],
-  {
-    help: 'Override font creation time (Unix time stamp)',
-    required: false,
-    type: 'int'
-  }
-);
+parser.add_argument('-d', '--description', {
+  help: 'Override default description text',
+  required: false,
+  type: 'str'
+});
 
-parser.addArgument(
-  [ '-u', '--url' ],
-  {
-    help: 'Override default manufacturer url',
-    required: false,
-    type: 'string'
-  }
-);
+parser.add_argument('--ts', {
+  help: 'Override font creation time (Unix time stamp)',
+  required: false,
+  type: 'int'
+});
 
-parser.addArgument(
-  [ '--vs' ],
-  {
-    help: 'Override default font version string (Version 1.0), can be "x.y" or "Version x.y"',
-    required: false,
-    type: 'string'
-  }
-);
+parser.add_argument('-u', '--url', {
+  help: 'Override default manufacturer url',
+  required: false,
+  type: 'str'
+});
 
-parser.addArgument(
-  [ 'infile' ],
-  {
-    nargs: 1,
-    help: 'Input file'
-  }
-);
+parser.add_argument('--vs', {
+  help: 'Override default font version string (Version 1.0), can be "x.y" or "Version x.y"',
+  required: false,
+  type: 'str'
+});
 
-parser.addArgument(
-  [ 'outfile' ],
-  {
-    nargs: 1,
-    help: 'Output file'
-  }
-);
+parser.add_argument('infile', {
+  nargs: 1,
+  help: 'Input file'
+});
+
+parser.add_argument('outfile', {
+  nargs: 1,
+  help: 'Output file'
+});
 
 
-var args = parser.parseArgs();
+var args = parser.parse_args();
 var svg;
 var options = {};
 
