@@ -1,7 +1,14 @@
+5.2.0 / 2021-04-07
+------------------
+
+- Bump dependencies.
+- Migrate CI to github.
+
+
 5.1.0 / 2020-10-29
 ------------------
 
-- Added support of `d` attr in nested `<path>` tag (for UNSCII font source). 
+- Added support of `d` attr in nested `<path>` tag (for UNSCII font source).
 
 
 
