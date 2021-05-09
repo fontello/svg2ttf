@@ -204,3 +204,16 @@ describe('svg2ttf', function () {
   });
 
 });
+
+describe('test yMax and usWinAscent', function () {
+  var src = fs.readFileSync(path.join(__dirname, 'fixtures/test_usWinAscent.svg'), 'utf-8');
+
+  it('yMax', function () {
+    assert.equal(896, parseFont(src).tables.head.yMax);
+  });
+
+  it('usWinDescent', function () {
+    assert.equal(896, parseFont(src).tables.os2.usWinAscent);
+  });
+
+});
