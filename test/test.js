@@ -205,15 +205,21 @@ describe('svg2ttf', function () {
 
 });
 
-describe('test yMax and usWinAscent', function () {
+describe('test usWinAscent and usWinDescent', function () {
   var src = fs.readFileSync(path.join(__dirname, 'fixtures/test_usWinAscent.svg'), 'utf-8');
 
-  it('yMax', function () {
-    assert.equal(896, parseFont(src).tables.head.yMax);
+  it('os2.usWinAscent', function () {
+    var tables = parseFont(src).tables;
+    var ascent = tables.hhea.ascender;
+
+    assert.strictEqual(tables.os2.usWinAscent, ascent);
   });
 
-  it('usWinDescent', function () {
-    assert.equal(896, parseFont(src).tables.os2.usWinAscent);
+  it.only('os2.usWinDescent', function () {
+    var tables = parseFont(src).tables;
+    var descent = tables.hhea.descender;
+
+    assert.strictEqual(tables.os2.usWinDescent, -descent);
   });
 
 });

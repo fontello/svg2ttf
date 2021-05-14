@@ -20,7 +20,7 @@
     "lib/"
   ],
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint --fix .",
     "test": "npm run lint && mocha",
     "update_fixture": "./svg2ttf.js --ts 1457357570703 test/fixtures/test.svg test/fixtures/test.ttf"
   },
