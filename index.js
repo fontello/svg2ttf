@@ -55,10 +55,14 @@ function svg2ttf(svgString, options) {
   font.horizOriginY = svgFont.horizOriginY || 0;
   font.vertOriginX  = svgFont.vertOriginX || 0;
   font.vertOriginY  = svgFont.vertOriginY || 0;
-  font.width    = svgFont.width || svgFont.unitsPerEm;
-  font.height   = svgFont.height || svgFont.unitsPerEm;
-  font.descent  = !isNaN(svgFont.descent) ? svgFont.descent : -font.vertOriginY;
-  font.ascent   = svgFont.ascent || (font.unitsPerEm - font.vertOriginY);
+  font.width        = svgFont.width || svgFont.unitsPerEm;
+  font.height       = svgFont.height || svgFont.unitsPerEm;
+  font.descent      = !isNaN(svgFont.descent) ? svgFont.descent : -font.vertOriginY;
+  font.ascent       = svgFont.ascent || (font.unitsPerEm - font.vertOriginY);
+  // Values for font substitution. We're mostly working with icon fonts, so they aren't expected to be substituted.
+  // https://docs.microsoft.com/en-us/typography/opentype/spec/os2#sxheight
+  font.capHeight    = svgFont.capHeight || 0; // 0 is a valid value if "H" glyph doesn't exist
+  font.xHeight      = svgFont.xHeight || 0;   // 0 is a valid value if "x" glyph doesn't exist
 
   if (typeof svgFont.weightClass !== 'undefined') {
     var wght = parseInt(svgFont.weightClass, 10);

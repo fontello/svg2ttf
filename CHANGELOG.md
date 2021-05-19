@@ -1,3 +1,9 @@
+5.3.0 / WIP
+------------------
+
+- Generated OS/2 table version is bumped from 1 to 5, #106.
+
+
 5.2.0 / 2021-04-07
 ------------------
 
