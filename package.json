@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "argparse": "^2.0.1",
-    "cubic2quad": "^1.0.0",
+    "cubic2quad": "^1.2.0",
     "lodash": "^4.17.10",
     "microbuffer": "^1.0.0",
     "svgpath": "^2.1.5",
