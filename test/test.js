@@ -205,21 +205,65 @@ describe('svg2ttf', function () {
 
 });
 
-describe('test usWinAscent and usWinDescent', function () {
-  var src = fs.readFileSync(path.join(__dirname, 'fixtures/test_usWinAscent.svg'), 'utf-8');
+describe('test arrow.svg', function () {
+  var src = fs.readFileSync(path.join(__dirname, 'fixtures/arrow.svg'), 'utf-8');
+  var tables = parseFont(src).tables;
 
   it('os2.usWinAscent', function () {
-    var tables = parseFont(src).tables;
-    var ascent = tables.hhea.ascender;
+    // 32148 is wrong
+    assert.strictEqual(tables.os2.usWinAscent, 896);
+  });
 
-    assert.strictEqual(tables.os2.usWinAscent, ascent);
+  it('head.yMax', function () {
+    // 32148 is wrong
+    assert.strictEqual(tables.head.yMax, 896);
   });
 
   it('os2.usWinDescent', function () {
-    var tables = parseFont(src).tables;
-    var descent = tables.hhea.descender;
-
-    assert.strictEqual(tables.os2.usWinDescent, -descent);
+    assert.strictEqual(tables.os2.usWinDescent, 128);
   });
 
+  it('head.yMin', function () {
+    assert.strictEqual(tables.head.yMin, -130);
+  });
+});
+
+describe('test shenhetongguo.svg', function () {
+  var src = fs.readFileSync(path.join(__dirname, 'fixtures/shenhetongguo.svg'), 'utf-8');
+  var tables = parseFont(src).tables;
+
+  it('head.yMin', function () {
+    assert.strictEqual(tables.head.yMin, -78);
+  });
+
+  it('head.xMax', function () {
+    assert.strictEqual(tables.head.xMax, 2728);
+  });
+});
+
+describe('test shenheweitongguo.svg', function () {
+  var src = fs.readFileSync(path.join(__dirname, 'fixtures/shenheweitongguo.svg'), 'utf-8');
+  var tables = parseFont(src).tables;
+
+  it('head.yMin', function () {
+    // 27274 is wrong
+    assert.strictEqual(tables.head.yMin, 0);
+  });
+  it('head.xMax', function () {
+    // -13440 is wrong
+    assert.strictEqual(tables.head.xMax, 2258);
+  });
+});
+
+describe('test wuxushenhe.svg', function () {
+  var src = fs.readFileSync(path.join(__dirname, 'fixtures/wuxushenhe.svg'), 'utf-8');
+  var tables = parseFont(src).tables;
+
+  it('head.yMin', function () {
+    assert.strictEqual(tables.head.yMin, 0);
+  });
+
+  it('head.xMax', function () {
+    assert.strictEqual(tables.head.xMax, 2045);
+  });
 });
