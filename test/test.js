@@ -209,9 +209,11 @@ describe('test arrow.svg', function () {
   var src = fs.readFileSync(path.join(__dirname, 'fixtures/arrow.svg'), 'utf-8');
   var tables = parseFont(src).tables;
 
+  fs.writeFileSync(path.join(__dirname, 'fixtures/arrow.ttf'), svg2ttf(src).buffer);
+
   it('os2.usWinAscent', function () {
     // 32148 is wrong
-    assert.strictEqual(tables.os2.usWinAscent, 896);
+    assert.strictEqual(tables.os2.usWinAscent, 988);
   });
 
   it('head.yMax', function () {
@@ -244,6 +246,8 @@ describe('test shenhetongguo.svg', function () {
 describe('test shenheweitongguo.svg', function () {
   var src = fs.readFileSync(path.join(__dirname, 'fixtures/shenheweitongguo.svg'), 'utf-8');
   var tables = parseFont(src).tables;
+
+  fs.writeFileSync(path.join(__dirname, 'fixtures/shenheweitongguo.ttf'), svg2ttf(src).buffer);
 
   it('head.yMin', function () {
     // 27274 is wrong
