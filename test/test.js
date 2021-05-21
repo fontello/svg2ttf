@@ -58,4 +58,18 @@ describe('svg2ttf', function () {
       assert.strictEqual(parsed.glyphs.glyphs[2].name, 'github');
     });
   });
+
+
+  describe('os/2 table', function () {
+    it('winAscent + winDescent should include line gap', function () {
+      // https://www.high-logic.com/font-editor/fontcreator/tutorials/font-metrics-vertical-line-spacing
+      let parsed = opentype.parse(svg2ttf(fixture).buffer.buffer);
+      let os2 = parsed.tables.os2;
+
+      // always should be >=, but for this specific test they should be equal
+      assert.strictEqual(
+        os2.usWinAscent + os2.usWinDescent,
+        os2.sTypoAscender - os2.sTypoDescender + os2.sTypoLineGap);
+    });
+  });
 });
