@@ -3,6 +3,8 @@
 
 
 const assert   = require('assert');
+var fs         = require('fs');
+var path       = require('path');
 const opentype = require('opentype.js');
 const svg2ttf  = require('../');
 
@@ -70,6 +72,42 @@ describe('svg2ttf', function () {
       assert.strictEqual(
         os2.usWinAscent + os2.usWinDescent,
         os2.sTypoAscender - os2.sTypoDescender + os2.sTypoLineGap);
+    });
+  });
+
+  describe('arrow.svg os/2 table', function () {
+    const src = fs.readFileSync(path.join(__dirname, 'fixtures/arrow.svg'), 'utf-8');
+
+    it('should be equal', function () {
+      const parsed = opentype.parse(svg2ttf(src).buffer.buffer);
+      const os2 = parsed.tables.os2;
+
+      assert.strictEqual(os2.usWinAscent, 988);
+      assert.strictEqual(os2.usWinDescent, 130);
+    });
+  });
+
+  describe('kvm.svg os/2 table', function () {
+    const src = fs.readFileSync(path.join(__dirname, 'fixtures/kvm.svg'), 'utf-8');
+
+    it('should be equal', function () {
+      const parsed = opentype.parse(svg2ttf(src).buffer.buffer);
+      const os2 = parsed.tables.os2;
+
+      assert.strictEqual(os2.usWinAscent, 988);
+      assert.strictEqual(os2.usWinDescent, 52468);
+    });
+  });
+
+  describe('yezi.svg os/2 table', function () {
+    const src = fs.readFileSync(path.join(__dirname, 'fixtures/yezi.svg'), 'utf-8');
+
+    it('should be equal', function () {
+      const parsed = opentype.parse(svg2ttf(src).buffer.buffer);
+      const os2 = parsed.tables.os2;
+
+      assert.strictEqual(os2.usWinAscent, 56375);
+      assert.strictEqual(os2.usWinDescent, 11936);
     });
   });
 });
