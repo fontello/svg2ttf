@@ -1,7 +1,10 @@
-5.3.0 / WIP
+6.0.0 / WIP
 ------------------
 
-- Generated OS/2 table version is bumped from 1 to 5, #106.
+- Big thanks to @yisibl for provided notes & samples. Those caused all fixes below.
+- `OS/2` table version bumped from v1 to v5 (#106).
+- `usWinAscent` should include `lineGap`.
+- Fixed `cubic2quad` dependency for edge cases.
 
 
 5.2.0 / 2021-04-07
