@@ -1,4 +1,4 @@
-6.0.0 / WIP
+6.0.0 / 2021-05-27
 ------------------
 
 - Big thanks to @yisibl for provided notes & samples. Those caused all fixes below.
