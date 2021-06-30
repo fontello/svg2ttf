@@ -101,6 +101,7 @@ function svg2ttf(svgString, options) {
     var glyph = new sfnt.Glyph();
 
     glyph.name = svgGlyph.name;
+    glyph.codes = svgGlyph.ligatureCodes || svgGlyph.unicode; // needed for nice validator error output
     glyph.d = svgGlyph.d;
     glyph.height = !isNaN(svgGlyph.height) ? svgGlyph.height : font.height;
     glyph.width = !isNaN(svgGlyph.width) ? svgGlyph.width : font.width;

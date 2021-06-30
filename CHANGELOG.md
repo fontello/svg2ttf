@@ -1,3 +1,8 @@
+6.0.2 / WIP
+------------------
+- Glyphs that don't fit in int32 now throw an error instead of generating invalid font, #113.
+
+
 6.0.1 / 2021-06-17
 ------------------
 
