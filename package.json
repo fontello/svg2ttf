@@ -30,7 +30,7 @@
     "lodash": "^4.17.10",
     "microbuffer": "^1.0.0",
     "svgpath": "^2.1.5",
-    "xmldom": "~0.6.0"
+    "xmldom": "github:xmldom/xmldom#0.7.0"
   },
   "devDependencies": {
     "eslint": "^7.0.0",
