@@ -1,4 +1,4 @@
-svg2ttf
+svg2ttf-new
 =======
 
 [![CI](https://github.com/fontello/svg2ttf/actions/workflows/ci.yml/badge.svg)](https://github.com/fontello/svg2ttf/actions/workflows/ci.yml)
@@ -22,7 +22,7 @@ Using from CLI
 Install:
 
 ``` bash
-npm install -g svg2ttf
+npm install -g svg2ttf-new
 ```
 
 Usage example:
