@@ -21,7 +21,9 @@ function svg2ttf(svgString, options) {
   var font = new sfnt.Font();
   var svgFont = svg.load(svgString);
 
-  options = options || {};
+  options = options || {
+    useTypoMetrics: true
+  };
 
   font.id = options.id || svgFont.id;
   font.familyName = options.familyname || svgFont.familyName || svgFont.id;
@@ -46,6 +48,12 @@ function svg2ttf(svgString, options) {
 
   if (typeof options.ts !== 'undefined') {
     font.createdDate = font.modifiedDate = new Date(parseInt(options.ts, 10) * 1000);
+  }
+
+  if (options.useTypoMetrics === false) {
+    // set "REGULAR" to fsSelection
+    // https://docs.microsoft.com/en-us/typography/opentype/spec/os2#fsselection
+    font.fsSelection = 0x40;
   }
 
   // Try to fill font metrics or guess defaults
