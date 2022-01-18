@@ -43,6 +43,7 @@ API
   - `description` - description string (optional)
   - `ts` - Unix timestamp (in seconds) to override creation time (optional)
   - `url` - manufacturer url (optional)
+  - `useTypoMetrics` - [USE_TYPO_METRICS](https://docs.microsoft.com/en-us/typography/opentype/spec/os2#fsselection) boolean (optional, default=true)
   - `version` - font version string, can be `Version x.y` or `x.y`.
 - `buf` - internal [byte buffer](https://github.com/fontello/microbuffer)
    object, similar to DataView. It's `buffer` property is  `Uin8Array` or `Array`
