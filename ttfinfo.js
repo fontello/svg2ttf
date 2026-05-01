@@ -4,49 +4,49 @@
  * Internal utility qu quickly check ttf tables size
  */
 
-/*eslint-disable no-console*/
+ 
 
-'use strict';
+'use strict'
 
 
-var fs      = require('fs');
-var _       = require('lodash');
-var format  = require('util').format;
+var fs      = require('fs')
+var _       = require('lodash')
+var format  = require('util').format
 
-var ArgumentParser = require('argparse').ArgumentParser;
+var ArgumentParser = require('argparse').ArgumentParser
 
 var parser = new ArgumentParser({
   add_help: true,
   description: 'Dump TTF tables info'
-});
+})
 
 parser.add_argument('infile', {
   nargs: 1,
   help: 'Input file'
-});
+})
 
 parser.add_argument('-d', '--details', {
   help: 'Show table dump',
   action: 'store_true',
   required: false
-});
+})
 
-var args = parser.parse_args();
-var ttf;
+var args = parser.parse_args()
+var ttf
 
 try {
-  ttf = fs.readFileSync(args.infile[0]);
+  ttf = fs.readFileSync(args.infile[0])
 } catch (e) {
-  console.error("Can't open input file (%s)", args.infile[0]);
-  process.exit(1);
+  console.error("Can't open input file (%s)", args.infile[0])
+  process.exit(1)
 }
 
-var tablesCount = ttf.readUInt16BE(4);
+var tablesCount = ttf.readUInt16BE(4)
 
-var i, offset, headers = [];
+var i, offset, headers = []
 
 for (i = 0; i < tablesCount; i++) {
-  offset = 12 + i * 16;
+  offset = 12 + i * 16
   headers.push({
     name: String.fromCharCode(
       ttf.readUInt8(offset),
@@ -56,29 +56,29 @@ for (i = 0; i < tablesCount; i++) {
     ),
     offset: ttf.readUInt32BE(offset + 8),
     length: ttf.readUInt32BE(offset + 12)
-  });
+  })
 }
 
-console.log(format('Tables count: %d'), tablesCount);
+console.log(format('Tables count: %d'), tablesCount)
 
 _.forEach(_.sortBy(headers, 'offset'), function (info) {
-  console.log('- %s: %d bytes (%d offset)', info.name, info.length, info.offset);
+  console.log('- %s: %d bytes (%d offset)', info.name, info.length, info.offset)
   if (args.details) {
-    var bufTable = ttf.slice(info.offset, info.offset + info.length);
-    var count = Math.floor(bufTable.length / 32);
-    var offset = 0;
+    var bufTable = ttf.slice(info.offset, info.offset + info.length)
+    var count = Math.floor(bufTable.length / 32)
+    var offset = 0
 
     //split buffer to the small chunks to fit the screen
     for (var i = 0; i < count; i++) {
-      console.log(bufTable.slice(offset, offset + 32));
-      offset += 32;
+      console.log(bufTable.slice(offset, offset + 32))
+      offset += 32
     }
 
     //output the rest
     if (offset < (info.length)) {
-      console.log(bufTable.slice(offset, info.length));
+      console.log(bufTable.slice(offset, info.length))
     }
 
-    console.log('');
+    console.log('')
   }
-});
+})

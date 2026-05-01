@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 
 
-const assert   = require('assert');
-const { describe, it } = require('node:test');
-const opentype = require('opentype.js');
-const svg2ttf  = require('../');
+const assert   = require('assert')
+const { describe, it } = require('node:test')
+const opentype = require('opentype.js')
+const svg2ttf  = require('../')
 
 const fixture = `
 <?xml version="1.0" standalone="no"?>
@@ -20,49 +20,49 @@ const fixture = `
 </font>
 </defs>
 </svg>
-`;
+`
 
 
 describe('svg2ttf', function () {
   describe('version', function () {
     it('should throw on bad version value', function () {
-      assert.throws(() => svg2ttf(fixture, { version: 123 }));
-      assert.throws(() => svg2ttf(fixture, { version: 'abc' }));
-    });
+      assert.throws(() => svg2ttf(fixture, { version: 123 }))
+      assert.throws(() => svg2ttf(fixture, { version: 'abc' }))
+    })
 
     it('should set proper version', function () {
-      let options, parsed;
+      let options, parsed
 
-      options = { version: '1.0' };
-      parsed = opentype.parse(svg2ttf(fixture, options).buffer.buffer);
-      assert.strictEqual(parsed.tables.name.version.en, 'Version 1.0');
+      options = { version: '1.0' }
+      parsed = opentype.parse(svg2ttf(fixture, options).buffer.buffer)
+      assert.strictEqual(parsed.tables.name.version.en, 'Version 1.0')
 
-      options = { version: 'Version 1.0' };
-      parsed = opentype.parse(svg2ttf(fixture, options).buffer.buffer);
-      assert.strictEqual(parsed.tables.name.version.en, 'Version 1.0');
+      options = { version: 'Version 1.0' }
+      parsed = opentype.parse(svg2ttf(fixture, options).buffer.buffer)
+      assert.strictEqual(parsed.tables.name.version.en, 'Version 1.0')
 
-      options = { version: 'version 2.0' };
-      parsed = opentype.parse(svg2ttf(fixture, options).buffer.buffer);
-      assert.strictEqual(parsed.tables.name.version.en, 'Version 2.0');
-    });
-  });
+      options = { version: 'version 2.0' }
+      parsed = opentype.parse(svg2ttf(fixture, options).buffer.buffer)
+      assert.strictEqual(parsed.tables.name.version.en, 'Version 2.0')
+    })
+  })
 
 
   describe('glyphs', function () {
     it('should return 3 glyphs', function () {
-      let parsed = opentype.parse(svg2ttf(fixture).buffer.buffer);
+      let parsed = opentype.parse(svg2ttf(fixture).buffer.buffer)
 
-      assert.strictEqual(parsed.glyphs.length, 3);
-      assert.strictEqual(parsed.glyphs.glyphs[0].name, ''); // missing-glyph
-      assert.strictEqual(parsed.glyphs.glyphs[1].name, 'duckduckgo');
-      assert.strictEqual(parsed.glyphs.glyphs[2].name, 'github');
-    });
-  });
+      assert.strictEqual(parsed.glyphs.length, 3)
+      assert.strictEqual(parsed.glyphs.glyphs[0].name, '') // missing-glyph
+      assert.strictEqual(parsed.glyphs.glyphs[1].name, 'duckduckgo')
+      assert.strictEqual(parsed.glyphs.glyphs[2].name, 'github')
+    })
+  })
 
 
   describe('os/2 table', function () {
-    let parsed = opentype.parse(svg2ttf(fixture).buffer.buffer);
-    let os2 = parsed.tables.os2;
+    let parsed = opentype.parse(svg2ttf(fixture).buffer.buffer)
+    let os2 = parsed.tables.os2
 
     it('winAscent + winDescent should include line gap', function () {
       // https://www.high-logic.com/font-editor/fontcreator/tutorials/font-metrics-vertical-line-spacing
@@ -70,13 +70,13 @@ describe('svg2ttf', function () {
       // always should be >=, but for this specific test they should be equal
       assert.strictEqual(
         os2.usWinAscent + os2.usWinDescent,
-        os2.sTypoAscender - os2.sTypoDescender + os2.sTypoLineGap);
-    });
+        os2.sTypoAscender - os2.sTypoDescender + os2.sTypoLineGap)
+    })
 
     it('os2.version = 4', function () {
-      assert.strictEqual(os2.version, 4);
-    });
-  });
+      assert.strictEqual(os2.version, 4)
+    })
+  })
 
 
   it('should return an error if glyph has too large bounding box', function () {
@@ -91,6 +91,6 @@ describe('svg2ttf', function () {
 </font>
 </defs>
 </svg>
-    `), /xMax value .* is out of bounds/);
-  });
-});
+    `), /xMax value .* is out of bounds/)
+  })
+})
