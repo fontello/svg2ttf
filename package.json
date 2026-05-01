@@ -33,7 +33,8 @@
     "svgpath": "^2.1.5"
   },
   "devDependencies": {
-    "eslint": "^7.0.0",
+    "eslint": "^9.39.4",
+    "neostandard": "^0.13.0",
     "opentype.js": "1.3.4"
   }
 }
