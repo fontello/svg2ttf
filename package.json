@@ -21,20 +21,19 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "test": "npm run lint && mocha",
+    "test": "npm run lint && node --test",
     "update_fixture": "./svg2ttf.js --ts 1457357570703 test/fixtures/test.svg test/fixtures/test.ttf"
   },
   "dependencies": {
+    "@xmldom/xmldom": "^0.9.10",
     "argparse": "^2.0.1",
     "cubic2quad": "^1.2.1",
     "lodash": "^4.17.10",
     "microbuffer": "^1.0.0",
-    "svgpath": "^2.1.5",
-    "@xmldom/xmldom": "^0.9.10"
+    "svgpath": "^2.1.5"
   },
   "devDependencies": {
     "eslint": "^7.0.0",
-    "mocha": "^8.3.2",
     "opentype.js": "1.3.4"
   }
 }

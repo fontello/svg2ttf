@@ -1,3 +1,11 @@
+6.1.0 / 2026-05-02
+------------------
+
+- Bump `xmldom` to 0.9. This requires node v14 instead of v10. But since both
+  reached EOL, seems ok with out major version change.
+- Drop `mocha` use.
+
+
 6.0.3 / 2021-08-21
 ------------------
 

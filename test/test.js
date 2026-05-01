@@ -1,8 +1,8 @@
-/*global it, describe*/
 'use strict';
 
 
 const assert   = require('assert');
+const { describe, it } = require('node:test');
 const opentype = require('opentype.js');
 const svg2ttf  = require('../');
 
