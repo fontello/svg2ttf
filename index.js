@@ -168,7 +168,6 @@ function svg2ttf (svgString, options) {
   })
 
   _.forEach(glyphs, function (glyph) {
-
     // Calculate accuracy for cubicToQuad transformation
     // For glyphs with height and width smaller than 500 use relative 0.06% accuracy,
     // for larger glyphs use fixed accuracy 0.3.

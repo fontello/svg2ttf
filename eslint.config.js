@@ -16,8 +16,12 @@ module.exports = [
     },
     rules: {
       'no-var': 'off',
+      'prefer-const': 'off',
       '@stylistic/no-multiple-empty-lines': 'off',
       'object-shorthand': 'off',
+      'no-useless-escape': 'off',
+      'n/no-deprecated-api': 'off',
+      '@stylistic/key-spacing': 'off',
     },
   },
 ]
