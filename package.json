@@ -1,12 +1,12 @@
 {
   "name": "svg2ttf",
-  "version": "6.0.3",
+  "version": "6.1.0",
   "description": "Converts SVG font to TTF font",
   "keywords": [
     "font",
     "ttf",
     "svg",
-    "convertor"
+    "converter"
   ],
   "author": "Sergey Batishchev <sergej.batishchev@gmail.com>",
   "license": "MIT",

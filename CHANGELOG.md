@@ -2,9 +2,9 @@
 ------------------
 
 - Bump `xmldom` to 0.9. This requires node v14 instead of v10. But since both
-  reached EOL, seems ok with out major version change.
+  reached EOL, seems ok without major version change.
 - Drop `mocha` use.
-
+- Migrated to neostandard lint rules.
 
 6.0.3 / 2021-08-21
 ------------------
