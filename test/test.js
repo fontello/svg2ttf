@@ -1,10 +1,10 @@
 'use strict'
 
 
-const assert   = require('assert')
+const assert = require('assert')
 const { describe, it } = require('node:test')
 const opentype = require('opentype.js')
-const svg2ttf  = require('../')
+const svg2ttf = require('../')
 
 const fixture = `
 <?xml version="1.0" standalone="no"?>

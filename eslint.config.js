@@ -14,5 +14,9 @@ module.exports = [
       ecmaVersion: 2015,
       sourceType: 'commonjs',
     },
+    rules: {
+      'no-var': 'off',
+      '@stylistic/no-multiple-empty-lines': 'off',
+    },
   },
 ]

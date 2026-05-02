@@ -7,11 +7,11 @@
 
 'use strict'
 
-var _       = require('lodash')
+var _ = require('lodash')
 var SvgPath = require('svgpath')
 var ucs2 = require('./lib/ucs2')
-var svg     = require('./lib/svg')
-var sfnt    = require('./lib/sfnt')
+var svg = require('./lib/svg')
+var sfnt = require('./lib/sfnt')
 
 
 var VERSION_RE = /^(Version )?(\d+[.]\d+)$/i
@@ -50,19 +50,19 @@ function svg2ttf(svgString, options) {
 
   // Try to fill font metrics or guess defaults
   //
-  font.unitsPerEm   = svgFont.unitsPerEm || 1000
+  font.unitsPerEm = svgFont.unitsPerEm || 1000
   font.horizOriginX = svgFont.horizOriginX || 0
   font.horizOriginY = svgFont.horizOriginY || 0
-  font.vertOriginX  = svgFont.vertOriginX || 0
-  font.vertOriginY  = svgFont.vertOriginY || 0
-  font.width        = svgFont.width || svgFont.unitsPerEm
-  font.height       = svgFont.height || svgFont.unitsPerEm
-  font.descent      = !isNaN(svgFont.descent) ? svgFont.descent : -font.vertOriginY
-  font.ascent       = svgFont.ascent || (font.unitsPerEm - font.vertOriginY)
+  font.vertOriginX = svgFont.vertOriginX || 0
+  font.vertOriginY = svgFont.vertOriginY || 0
+  font.width = svgFont.width || svgFont.unitsPerEm
+  font.height = svgFont.height || svgFont.unitsPerEm
+  font.descent = !isNaN(svgFont.descent) ? svgFont.descent : -font.vertOriginY
+  font.ascent = svgFont.ascent || (font.unitsPerEm - font.vertOriginY)
   // Values for font substitution. We're mostly working with icon fonts, so they aren't expected to be substituted.
   // https://docs.microsoft.com/en-us/typography/opentype/spec/os2#sxheight
-  font.capHeight    = svgFont.capHeight || 0 // 0 is a valid value if "H" glyph doesn't exist
-  font.xHeight      = svgFont.xHeight || 0   // 0 is a valid value if "x" glyph doesn't exist
+  font.capHeight = svgFont.capHeight || 0 // 0 is a valid value if "H" glyph doesn't exist
+  font.xHeight = svgFont.xHeight || 0 // 0 is a valid value if "x" glyph doesn't exist
 
   if (typeof svgFont.weightClass !== 'undefined') {
     var wght = parseInt(svgFont.weightClass, 10)

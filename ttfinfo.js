@@ -9,9 +9,9 @@
 'use strict'
 
 
-var fs      = require('fs')
-var _       = require('lodash')
-var format  = require('util').format
+var fs = require('fs')
+var _ = require('lodash')
+var format = require('util').format
 
 var ArgumentParser = require('argparse').ArgumentParser
 
