@@ -17,7 +17,7 @@ var sfnt = require('./lib/sfnt')
 var VERSION_RE = /^(Version )?(\d+[.]\d+)$/i
 
 
-function svg2ttf(svgString, options) {
+function svg2ttf (svgString, options) {
   var font = new sfnt.Font()
   var svgFont = svg.load(svgString)
 
@@ -87,7 +87,7 @@ function svg2ttf(svgString, options) {
   var codePoints = font.codePoints
   var ligatures = font.ligatures
 
-  function addCodePoint(codePoint, glyph) {
+  function addCodePoint (codePoint, glyph) {
     if (codePoints[codePoint]) {
       // Ignore code points already defined
       return false
@@ -161,7 +161,7 @@ function svg2ttf(svgString, options) {
 
   var nextID = 0
 
-  //add IDs
+  // add IDs
   _.forEach(glyphs, function (glyph) {
     glyph.id = nextID
     nextID++
@@ -175,7 +175,7 @@ function svg2ttf(svgString, options) {
     var glyphSize = Math.max(glyph.width, glyph.height)
     var accuracy = (glyphSize > 500) ? 0.3 : glyphSize * 0.0006
 
-    //SVG transformations
+    // SVG transformations
     var svgPath = new SvgPath(glyph.d)
       .abs()
       .unshort()

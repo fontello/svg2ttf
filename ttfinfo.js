@@ -68,13 +68,13 @@ _.forEach(_.sortBy(headers, 'offset'), function (info) {
     var count = Math.floor(bufTable.length / 32)
     var offset = 0
 
-    //split buffer to the small chunks to fit the screen
+    // split buffer to the small chunks to fit the screen
     for (var i = 0; i < count; i++) {
       console.log(bufTable.slice(offset, offset + 32))
       offset += 32
     }
 
-    //output the rest
+    // output the rest
     if (offset < (info.length)) {
       console.log(bufTable.slice(offset, info.length))
     }
