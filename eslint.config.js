@@ -22,6 +22,7 @@ module.exports = [
       'no-useless-escape': 'off',
       'n/no-deprecated-api': 'off',
       '@stylistic/key-spacing': 'off',
+      'camelcase': 'off',
     },
   },
 ]

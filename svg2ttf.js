@@ -5,7 +5,7 @@
  Written for fontello.com project.
  */
 
- 
+
 
 'use strict'
 
@@ -89,6 +89,6 @@ if (args.vs) options.version = args.vs
 
 var result = Buffer.from
   ? Buffer.from(svg2ttf(svg, options).buffer)
-  :  new Buffer(svg2ttf(svg, options).buffer)
+  : new Buffer(svg2ttf(svg, options).buffer)
 
 fs.writeFileSync(args.outfile[0], result)

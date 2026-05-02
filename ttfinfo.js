@@ -4,7 +4,7 @@
  * Internal utility qu quickly check ttf tables size
  */
 
- 
+
 
 'use strict'
 
@@ -43,7 +43,9 @@ try {
 
 var tablesCount = ttf.readUInt16BE(4)
 
-var i, offset, headers = []
+var i
+var offset
+var headers = []
 
 for (i = 0; i < tablesCount; i++) {
   offset = 12 + i * 16
