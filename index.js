@@ -146,7 +146,7 @@ function svg2ttf (svgString, options) {
       var added = addCodePoint(charPoint, glyph)
 
       if (added) {
-        glyph.name = ucs2.encode([ charPoint ])
+        glyph.name = ucs2.encode([charPoint])
         glyphs.push(glyph)
       }
     })

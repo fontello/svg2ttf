@@ -87,9 +87,8 @@ if (args.url) options.url = args.url
 
 if (args.vs) options.version = args.vs
 
-var result = Buffer.from ?
-  Buffer.from(svg2ttf(svg, options).buffer)
-  :
-  new Buffer(svg2ttf(svg, options).buffer)
+var result = Buffer.from
+  ? Buffer.from(svg2ttf(svg, options).buffer)
+  :  new Buffer(svg2ttf(svg, options).buffer)
 
 fs.writeFileSync(args.outfile[0], result)

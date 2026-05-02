@@ -17,6 +17,7 @@ module.exports = [
     rules: {
       'no-var': 'off',
       '@stylistic/no-multiple-empty-lines': 'off',
+      'object-shorthand': 'off',
     },
   },
 ]
