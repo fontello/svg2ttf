@@ -35,15 +35,15 @@ describe('svg2ttf', function () {
 
       options = { version: '1.0' }
       parsed = opentype.parse(svg2ttf(fixture, options).buffer.buffer)
-      assert.strictEqual(parsed.tables.name.version.en, 'Version 1.0')
+      assert.strictEqual(parsed.tables.name.windows.version.en, 'Version 1.0')
 
       options = { version: 'Version 1.0' }
       parsed = opentype.parse(svg2ttf(fixture, options).buffer.buffer)
-      assert.strictEqual(parsed.tables.name.version.en, 'Version 1.0')
+      assert.strictEqual(parsed.tables.name.windows.version.en, 'Version 1.0')
 
       options = { version: 'version 2.0' }
       parsed = opentype.parse(svg2ttf(fixture, options).buffer.buffer)
-      assert.strictEqual(parsed.tables.name.version.en, 'Version 2.0')
+      assert.strictEqual(parsed.tables.name.windows.version.en, 'Version 2.0')
     })
   })
 
